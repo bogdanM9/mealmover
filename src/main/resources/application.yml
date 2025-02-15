@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/male_mover
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: test123
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: applearnsql@gmail.com
+    password: mskmqsnsomyzficg
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: "*"
+  application:
+    name: MealMover
+    frontend:
+      url: http://localhost:5173
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      access-token:
+        expiration: 86400000 # a day
+      activate-token:
+        expiration: 86400000 # a day
+      reset-password-token:
+        expiration: 3600000 # 1 hour
+file:
+  storage:
+    location: D:\MealMover\backend\uploads
