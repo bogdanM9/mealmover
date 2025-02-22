@@ -16,7 +16,7 @@ public class CreditCardModel {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private UUID id;
 
-    @Column(name="card_number", nullable=false, length=19)
+    @Column(name="card_number", nullable=false)
     private String cardNumber;
 
     @Column(name="holder_name", nullable=false, length=50)
@@ -35,6 +35,6 @@ public class CreditCardModel {
     private boolean isMain;
 
     @ManyToOne
-    @JoinColumn(name="client_id", nullable=false)
+    @JoinColumn(name="client_id")
     private ClientModel client;
 }

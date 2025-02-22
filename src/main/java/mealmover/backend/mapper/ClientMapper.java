@@ -6,7 +6,10 @@ import mealmover.backend.models.ClientModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {
+        AddressMapper.class,
+        CreditCardMapper.class
+})
 public interface ClientMapper {
     ClientResponseDto toDto (ClientModel model);
 

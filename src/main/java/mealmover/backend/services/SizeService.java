@@ -46,18 +46,18 @@ public class SizeService {
     public List<SizeResponseDto> getAll() {
         logger.info("Getting all Sizes");
         return this.repository
-            .findAll()
-            .stream()
-            .map(this.mapper::toDto)
-            .toList();
+                .findAll()
+                .stream()
+                .map(this.mapper::toDto)
+                .toList();
     }
 
     public SizeResponseDto getById(UUID id) {
         logger.info("Getting size by id: {}", id);
         return this.repository
-            .findById(id)
-            .map(this.mapper::toDto)
-            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+                .findById(id)
+                .map(this.mapper::toDto)
+                .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
     }
 
 
@@ -81,8 +81,8 @@ public class SizeService {
 
     public SizeModel getModelById(UUID sizeId) {
         return this.repository
-            .findById(sizeId)
-            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+                .findById(sizeId)
+                .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
     }
 
     public SizeModel getOrCreate(SizeCreateDto sizeCreateDto) {
@@ -93,7 +93,16 @@ public class SizeService {
         SizeModel sizeModel = this.mapper.toModel(sizeCreateDto);
 
         return this.repository
-            .findByName(name)
-            .orElseGet(() -> this.repository.save(sizeModel));
+                .findByName(name)
+                .orElseGet(() -> this.repository.save(sizeModel));
     }
+
+    public void deleteOrphans() {
+        List<SizeModel> orphans = this.repository.findAllOrphans();
+        orphans.forEach(size -> {
+            logger.info("Deleting orphan size with id: {}", size.getId());
+            this.repository.deleteById(size.getId());
+        });
+    }
+
 }

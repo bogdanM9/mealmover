@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import mealmover.backend.dtos.requests.ProductCreateRequestDto;
 import mealmover.backend.dtos.responses.ProductResponseDto;
 import mealmover.backend.exceptions.ConflictException;
+import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.ProductMapper;
 import mealmover.backend.models.*;
-import mealmover.backend.repositories.IngredientRepository;
 import mealmover.backend.repositories.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,9 +72,42 @@ public class ProductService {
         );
 
         ProductModel savedProduct = this.repository.save(productModel);
-
         System.out.println(savedProduct);
 
         return this.mapper.toDto(savedProduct);
+    }
+
+
+    public ProductResponseDto getById(UUID id) {
+        ProductModel productModel = this.repository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Product not found"));
+
+        return this.mapper.toDto(productModel);
+    }
+
+    public ProductModel getModelById(UUID id) {
+        return this.repository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Product not found"));
+    }
+
+
+    public Set<ProductResponseDto> getAll() {
+        return this.repository.findAll()
+            .stream()
+            .map(this.mapper::toDto)
+            .collect(Collectors.toSet());
+    }
+
+    public void deleteById(UUID id) {
+        if (!this.repository.existsById(id)) {
+            throw new NotFoundException("Product not found");
+        }
+        this.repository.deleteById(id);
+        this.sizeService.deleteOrphans();
+    }
+
+    public void deleteAll() {
+        this.repository.deleteAll();
+        this.sizeService.deleteOrphans();
     }
 }

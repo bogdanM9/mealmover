@@ -13,50 +13,54 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name="products")
+@Table(name = "products")
 public class ProductModel {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable=false, length=200)
+    @Column(nullable = false, length = 200)
     private String name;
 
-    @Column(name="image_uri", nullable=false)
+    @Column(name = "image_uri", nullable = false)
     private String imageUri;
 
     @ManyToOne
-    @JoinColumn(name="category_id", nullable=false)
+    @JoinColumn(name = "category_id", nullable = false)
     private CategoryModel category;
 
-    @OneToMany(mappedBy="product", fetch= FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ReviewModel> reviews = new HashSet<>();
 
-    @OneToMany(mappedBy="product", fetch= FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    },
+            orphanRemoval = true)
     private Set<ProductSizeModel> productSizes = new HashSet<>();
 
     @ManyToMany(
-        cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-        }
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }
     )
     @JoinTable(
-        name = "products_ingredients",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+            name = "products_ingredients",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private Set<IngredientModel> ingredients = new HashSet<>();
 
     @ManyToMany(
-        cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-        })
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
-        name = "products_extra_ingredients",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "extra_ingredient_id")
+            name = "products_extra_ingredients",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "extra_ingredient_id")
     )
     private Set<ExtraIngredientModel> extraIngredients = new HashSet<>();
 }

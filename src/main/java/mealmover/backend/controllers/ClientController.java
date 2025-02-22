@@ -2,11 +2,17 @@ package mealmover.backend.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import mealmover.backend.dtos.requests.AddressCreateRequestDto;
 import mealmover.backend.dtos.requests.ClientCreateRequestDto;
 import mealmover.backend.dtos.requests.ClientUpdateRequestDto;
+import mealmover.backend.dtos.requests.CreditCardCreateRequestDto;
+import mealmover.backend.dtos.responses.AddressResponseDto;
 import mealmover.backend.dtos.responses.ClientResponseDto;
+import mealmover.backend.dtos.responses.CreditCardResponseDto;
 import mealmover.backend.messages.ClientMessages;
+import mealmover.backend.messages.CreditCardMessages;
 import mealmover.backend.services.ClientService;
+import mealmover.backend.services.CreditCardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +31,14 @@ public class ClientController {
     public ResponseEntity<ClientResponseDto> create(@Valid @RequestBody ClientCreateRequestDto requestDto) {
         ClientResponseDto response = this.service.create(requestDto);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/addresses")
+    public ResponseEntity<AddressResponseDto> addAddress(
+        @PathVariable UUID id,
+        @Valid @RequestBody AddressCreateRequestDto requestDto
+    ) {
+        return ResponseEntity.ok(this.service.addAddress(id, requestDto));
     }
 
     @GetMapping
@@ -57,4 +71,12 @@ public class ClientController {
         this.service.deleteAll();
         return ResponseEntity.ok(messages.deletedAll());
     }
+
+
+    @PostMapping("/add/credit-cards")
+    public ResponseEntity<CreditCardResponseDto> create(@Valid @RequestBody CreditCardCreateRequestDto requestDto) {
+        CreditCardResponseDto response = this.service.addCreditCard(requestDto);
+        return ResponseEntity.ok(response);
+    }
+
 }

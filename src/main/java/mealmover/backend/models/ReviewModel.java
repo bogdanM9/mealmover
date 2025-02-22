@@ -25,10 +25,10 @@ public class ReviewModel {
     @Column(nullable=false, length=2000)
     private String text;
 
-    @Column(name="created_at" ,nullable=false)
+    @Column(name="created_at")
     private LocalDateTime postedAt;
 
-    @Column(name="updated_at" ,nullable=false)
+    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 
     @PrePersist

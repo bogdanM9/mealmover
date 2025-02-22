@@ -27,6 +27,6 @@ public class SizeModel {
     @Column(nullable = false)
     private int weight;
 
-    @OneToMany(mappedBy="size", fetch= FetchType.LAZY)
+    @OneToMany(mappedBy="size", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<ProductSizeModel> productSizes = new HashSet<>();
 }

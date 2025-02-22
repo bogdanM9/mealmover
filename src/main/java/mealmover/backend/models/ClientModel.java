@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 @Table(name="clients")
 public class ClientModel extends UserModel{
-    @OneToMany(mappedBy="client", fetch= FetchType.LAZY)
+    @OneToMany(mappedBy="client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<AddressModel> addresses = new HashSet<>();
 
     @OneToMany(mappedBy="client", fetch= FetchType.LAZY)

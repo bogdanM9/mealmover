@@ -6,11 +6,12 @@ import mealmover.backend.dtos.responses.ProductResponseDto;
 import mealmover.backend.services.ProductService;
 import mealmover.backend.services.utils.MapperService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -28,4 +29,30 @@ public class ProductController {
         ProductResponseDto responseDto = this.productService.create(image, requestDto);
         return ResponseEntity.ok(responseDto);
     }
+
+    @GetMapping
+    public ResponseEntity<Set<ProductResponseDto>> getAll() {
+        Set<ProductResponseDto> responseDtos = this.productService.getAll();
+        return ResponseEntity.ok(responseDtos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDto> getById(@PathVariable("id") UUID id) {
+        ProductResponseDto responseDtos = this.productService.getById(id);
+        return ResponseEntity.ok(responseDtos);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
+        this.productService.deleteById(id);
+        return ResponseEntity.ok("Product deleted");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteAll() {
+        this.productService.deleteAll();
+        return ResponseEntity.ok("All products have been deleted");
+    }
+
+
 }
