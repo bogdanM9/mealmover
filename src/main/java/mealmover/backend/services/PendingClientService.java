@@ -2,15 +2,12 @@ package mealmover.backend.services;
 
 import lombok.RequiredArgsConstructor;
 import mealmover.backend.dtos.requests.CreatePendingClientRequestDto;
-import mealmover.backend.dtos.requests.IngredientUpdateRequestDto;
-import mealmover.backend.dtos.responses.IngredientResponseDto;
 import mealmover.backend.dtos.responses.PendingClientResponseDto;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.PendingClientMapper;
 import mealmover.backend.messages.PendingClientMessages;
 import mealmover.backend.messages.UserMessages;
-import mealmover.backend.models.IngredientModel;
 import mealmover.backend.models.PendingClientModel;
 import mealmover.backend.repositories.PendingClientRepository;
 import mealmover.backend.services.auth.JwtService;

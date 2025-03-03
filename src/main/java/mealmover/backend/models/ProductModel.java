@@ -32,23 +32,27 @@ public class ProductModel {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ReviewModel> reviews = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {
+    @OneToMany(
+        mappedBy = "product",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
-    },
-            orphanRemoval = true)
+        }
+    )
     private Set<ProductSizeModel> productSizes = new HashSet<>();
 
     @ManyToMany(
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            }
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        }
     )
     @JoinTable(
-            name = "products_ingredients",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+        name = "products_ingredients",
+        joinColumns = @JoinColumn(name = "product_id"),
+        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private Set<IngredientModel> ingredients = new HashSet<>();
 

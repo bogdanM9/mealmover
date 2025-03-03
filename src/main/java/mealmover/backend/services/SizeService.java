@@ -1,17 +1,12 @@
 package mealmover.backend.services;
 
 import lombok.RequiredArgsConstructor;
-import mealmover.backend.dtos.ExtraIngredientCreateDto;
 import mealmover.backend.dtos.SizeCreateDto;
 import mealmover.backend.dtos.requests.CreateSizeRequestDto;
-import mealmover.backend.dtos.requests.ExtraIngredientCreateRequestDto;
-import mealmover.backend.dtos.requests.IngredientCreateRequestDto;
 import mealmover.backend.dtos.responses.SizeResponseDto;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.SizeMapper;
 import mealmover.backend.messages.SizeMessages;
-import mealmover.backend.models.AllergenModel;
-import mealmover.backend.models.IngredientModel;
 import mealmover.backend.models.SizeModel;
 import mealmover.backend.repositories.SizeRepository;
 import org.slf4j.Logger;

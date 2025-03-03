@@ -12,7 +12,7 @@ public interface OperatorMapper {
     OperatorResponseDto toDto (OperatorModel model);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "password", ignore = true)
     OperatorModel toModel (OperatorCreateRequestDto dto);
 }

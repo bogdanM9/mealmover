@@ -21,12 +21,6 @@ public class ReviewController {
     private final ReviewMessages reviewMessages;
 
 
-    @PostMapping
-    public ResponseEntity<ReviewResponseDto> create(@Valid @RequestBody ReviewCreateRequestDto requestDto) {
-        ReviewResponseDto response = this.reviewService.create(requestDto);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping
     public ResponseEntity<List<ReviewResponseDto>> getAll() {
         return ResponseEntity.ok(this.reviewService.getAll());

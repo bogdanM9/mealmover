@@ -12,7 +12,7 @@ public interface DriverMapper {
     DriverResponseDto toDto (DriverModel model);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "password", ignore = true)
     DriverModel toModel (DriverCreateRequestDto dto);
 }

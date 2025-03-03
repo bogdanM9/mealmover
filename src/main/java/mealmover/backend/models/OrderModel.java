@@ -1,6 +1,7 @@
 package mealmover.backend.models;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,39 +13,38 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name="orders")
+@Table(name = "orders")
 public class OrderModel {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable=false)
-    private float total;
 
-    @Column(nullable=false, length=1000)
+    @Column(length = 1000)
     private String details;
 
-    @Column(name = "delivery_time", nullable=false)
-    private LocalDateTime deliveryTime;
+    // TODO to see in the future if will be added
+//    @Column(name = "delivery_time", nullable=false)
+//    private LocalDateTime deliveryTime;
 
     @ManyToOne
-    @JoinColumn(name="status_id", nullable=false)
+    @JoinColumn(name = "status_id", nullable = false)
     private StatusModel status;
 
     @ManyToOne
-    @JoinColumn(name="client_id", nullable=false)
+    @JoinColumn(name = "client_id")
     private ClientModel client;
 
     @ManyToOne
-    @JoinColumn(name="address_id", nullable=false)
+    @JoinColumn(name = "address_id", nullable = false)
     private AddressModel address;
 
-    @OneToMany(mappedBy="order", fetch= FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<OrderProductModel> orderProducts = new HashSet<>();
-    @Column(name="created_at" ,nullable=false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name="updated_at" ,nullable=false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @PrePersist

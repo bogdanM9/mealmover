@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name="orders_products_extra_ingredients")
-public class OrdersProductsExtraIngredientsModel {
+public class OrderProductExtraIngredientModel {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private UUID id;
@@ -25,4 +25,12 @@ public class OrdersProductsExtraIngredientsModel {
     @ManyToOne
     @JoinColumn(name = "extra_ingredient_id", nullable = false)
     private ExtraIngredientModel extraIngredient;
+
+    public OrderProductExtraIngredientModel(int quantity, ExtraIngredientModel modelById) {
+        this.quantity = quantity;
+        this.extraIngredient = modelById;
+    }
+
+    public OrderProductExtraIngredientModel() {
+    }
 }

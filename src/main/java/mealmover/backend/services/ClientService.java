@@ -14,7 +14,6 @@ import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.AddressMapper;
 import mealmover.backend.mapper.ClientMapper;
 import mealmover.backend.messages.ClientMessages;
-import mealmover.backend.models.AddressModel;
 import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.RoleModel;
 import mealmover.backend.repositories.ClientRepository;
@@ -24,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -51,20 +51,20 @@ public class ClientService {
             throw new ConflictException(this.messages.alreadyExistsByEmail());
         }
 
-        RoleModel role = this.roleService.getOrCreate(Role.CLIENT.toCapitalize());
+        RoleModel roleModel = this.roleService.getOrCreate(Role.CLIENT.toCapitalize());
 
-        ClientModel client = this.mapper.toModel(requestDto);
+        ClientModel clientModel = this.mapper.toModel(requestDto);
 
         String hashedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        client.setRole(role);
-        client.setPassword(hashedPassword);
+        clientModel.getRoles().add(roleModel);
+        clientModel.setPassword(hashedPassword);
 
-        ClientModel savedClient = this.repository.save(client);
+        ClientModel savedClientModel = this.repository.save(clientModel);
 
         logger.info("Successfully created client with name: {}", email);
 
-        return this.mapper.toDto(savedClient);
+        return this.mapper.toDto(savedClientModel);
     }
 
     public List<ClientResponseDto> getAll() {

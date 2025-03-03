@@ -3,7 +3,7 @@ package mealmover.backend.middlewares;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.exceptions.UnauthorizedException;
-import mealmover.backend.responses.ErrorResponsePayload;
+import mealmover.backend.dtos.responses.ErrorResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -18,28 +18,28 @@ public class ErrorMiddleware {
     private static final Logger logger = LoggerFactory.getLogger(ErrorMiddleware.class);
 
     @ExceptionHandler(NotFoundException.class)
-    public final ResponseEntity<ErrorResponsePayload> handleNotFoundException(NotFoundException e) {
+    public final ResponseEntity<ErrorResponseDto> handleNotFoundException(NotFoundException e) {
         logger.error("Not found exception: ", e);
-        ErrorResponsePayload responsePayload = new ErrorResponsePayload(e.getMessage());
+        ErrorResponseDto responsePayload = new ErrorResponseDto(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responsePayload);
     }
 
     @ExceptionHandler(ConflictException.class)
-    public final ResponseEntity<ErrorResponsePayload> handleConflictException(ConflictException e){
+    public final ResponseEntity<ErrorResponseDto> handleConflictException(ConflictException e){
         logger.error("Conflict Exception: ", e);
-        ErrorResponsePayload responsePayload = new ErrorResponsePayload(e.getMessage());
+        ErrorResponseDto responsePayload = new ErrorResponseDto(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(responsePayload);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public final ResponseEntity<ErrorResponsePayload> handleUnauthorizedException(UnauthorizedException e){
+    public final ResponseEntity<ErrorResponseDto> handleUnauthorizedException(UnauthorizedException e){
         logger.error("Unauthorized Exception: ", e);
-        ErrorResponsePayload responsePayload = new ErrorResponsePayload(e.getMessage());
+        ErrorResponseDto responsePayload = new ErrorResponseDto(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responsePayload);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public final ResponseEntity<ErrorResponsePayload> handleValidationException(MethodArgumentNotValidException e) {
+    public final ResponseEntity<ErrorResponseDto> handleValidationException(MethodArgumentNotValidException e) {
         logger.error("Validation exception:", e);
 
         String message = e.getBindingResult()
@@ -49,7 +49,7 @@ public class ErrorMiddleware {
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .orElse("Validation failed");
 
-        ErrorResponsePayload responsePayload = new ErrorResponsePayload(message);
+        ErrorResponseDto responsePayload = new ErrorResponseDto(message);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responsePayload);
     }

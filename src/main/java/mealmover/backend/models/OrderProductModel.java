@@ -29,5 +29,15 @@ public class OrderProductModel {
     private ProductSizeModel productSize;
 
     @OneToMany(mappedBy = "orderProduct", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrdersProductsExtraIngredientsModel> extraIngredients = new HashSet<>();
+    private Set<OrderProductExtraIngredientModel> extraIngredients = new HashSet<>();
+
+    public OrderProductModel(int quantity, ProductSizeModel productSize, OrderModel order, Set<OrderProductExtraIngredientModel> extraIngredients) {
+        this.quantity = quantity;
+        this.productSize = productSize;
+        this.order = order;
+        this.extraIngredients = extraIngredients;
+    }
+
+    public OrderProductModel() {
+    }
 }

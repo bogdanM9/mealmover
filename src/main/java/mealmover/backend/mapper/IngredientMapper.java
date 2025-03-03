@@ -2,11 +2,8 @@ package mealmover.backend.mapper;
 
 import mealmover.backend.dtos.IngredientCreateDto;
 import mealmover.backend.dtos.requests.IngredientCreateRequestDto;
-import mealmover.backend.dtos.requests.RoleCreateRequestDto;
 import mealmover.backend.dtos.responses.IngredientResponseDto;
-import mealmover.backend.dtos.responses.RoleResponseDto;
 import mealmover.backend.models.IngredientModel;
-import mealmover.backend.models.RoleModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

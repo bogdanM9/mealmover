@@ -18,12 +18,10 @@ public class RoleModel {
     @Column(name="name", nullable=false,unique = true, length=50)
     private String name;
 
-    @OneToMany(mappedBy="role", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles")
     private Set<UserModel> users = new HashSet<>();
 
-    public RoleModel() {
-
-    }
+    public RoleModel() {}
 
     public RoleModel(String name) {
         this.name = name;

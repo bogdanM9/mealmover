@@ -1,8 +1,11 @@
 package mealmover.backend.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mealmover.backend.dtos.requests.ProductCreateRequestDto;
+import mealmover.backend.dtos.requests.ReviewCreateRequestDto;
 import mealmover.backend.dtos.responses.ProductResponseDto;
+import mealmover.backend.dtos.responses.ReviewResponseDto;
 import mealmover.backend.services.ProductService;
 import mealmover.backend.services.utils.MapperService;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,12 @@ public class ProductController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @PostMapping("/add-review")
+    public ResponseEntity<ReviewResponseDto> addReview(@Valid @RequestBody ReviewCreateRequestDto requestDto) {
+        ReviewResponseDto response = this.productService.addReview(requestDto);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping
     public ResponseEntity<Set<ProductResponseDto>> getAll() {
         Set<ProductResponseDto> responseDtos = this.productService.getAll();
@@ -53,6 +62,4 @@ public class ProductController {
         this.productService.deleteAll();
         return ResponseEntity.ok("All products have been deleted");
     }
-
-
 }

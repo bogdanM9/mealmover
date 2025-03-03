@@ -1,8 +1,6 @@
 package mealmover.backend.services;
 
 import lombok.RequiredArgsConstructor;
-import mealmover.backend.dtos.AllergenCreateDto;
-import mealmover.backend.dtos.IngredientCreateDto;
 import mealmover.backend.dtos.requests.IngredientCreateRequestDto;
 import mealmover.backend.dtos.requests.IngredientUpdateRequestDto;
 import mealmover.backend.dtos.responses.IngredientResponseDto;
@@ -18,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;

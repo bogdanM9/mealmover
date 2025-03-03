@@ -30,5 +30,5 @@ public class ExtraIngredientModel {
     private Set<ProductModel> products = new HashSet<>();
 
     @OneToMany(mappedBy = "extraIngredient", fetch = FetchType.LAZY)
-    private Set<OrdersProductsExtraIngredientsModel> ordersProductsExtraIngredients = new HashSet<>();
+    private Set<OrderProductExtraIngredientModel> ordersProductsExtraIngredients = new HashSet<>();
 }

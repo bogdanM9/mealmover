@@ -46,7 +46,7 @@ public class DriverService {
 
         String hashedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        driver.setRole(role);
+        driver.getRoles().add(role);
         driver.setPassword(hashedPassword);
 
         DriverModel savedDriver = this.repository.save(driver);

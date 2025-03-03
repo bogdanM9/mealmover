@@ -12,6 +12,7 @@ import mealmover.backend.repositories.AddressRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +26,7 @@ public class AddressService {
     private static final Logger logger = LoggerFactory.getLogger(AddressService.class);
 
 
+    @Transactional
     public AddressResponseDto create(AddressCreateRequestDto dto) {
         logger.info("Attempting to create an Address");
 
@@ -36,7 +38,8 @@ public class AddressService {
 
         return this.mapper.toDto(savedAddress);
     }
-    // metoda stricta pentru clinetService.addService();
+
+    @Transactional
     public AddressResponseDto create(ClientModel clientModel, AddressCreateRequestDto requestDto) {
         logger.info("Attempting to create an Address");
 
@@ -50,7 +53,22 @@ public class AddressService {
         return this.mapper.toDto(createdAddress);
     }
 
+    @Transactional
+    public AddressModel save(ClientModel clientModel, AddressCreateRequestDto requestDto) {
+        logger.info("Attempting to create an Address");
 
+        AddressModel addressModel = this.mapper.toModel(requestDto);
+        addressModel.setClient(clientModel);
+
+        AddressModel createdAddress = this.repository.save(addressModel);
+
+        logger.info("Successfully created address");
+
+        return createdAddress;
+    }
+
+
+    @Transactional(readOnly = true)
     public List<AddressResponseDto> getAll() {
         logger.info("Getting all Addresses");
         return this.repository
@@ -60,6 +78,7 @@ public class AddressService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public AddressResponseDto getById(UUID id) {
         logger.info("Getting address by id: {}", id);
         return this.repository
@@ -68,14 +87,22 @@ public class AddressService {
             .orElseThrow(() -> new NotFoundException(this.messages.notFoundById()));
     }
 
+    @Transactional
     public void deleteById(UUID id) {
         logger.info("Getting Address by id: {}", id);
         this.repository.deleteById(id);
     }
 
+    @Transactional
     public void deleteAll() {
         logger.info("Deleting all Addresses..");
         this.repository.deleteAll();
         logger.info("Addresses deleted!");
+    }
+
+    @Transactional(readOnly = true)
+    public AddressModel getModelById(UUID addressId) {
+        return this.repository.findById(addressId)
+            .orElseThrow(() -> new NotFoundException(this.messages.notFoundById()));
     }
 }

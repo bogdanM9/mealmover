@@ -22,4 +22,11 @@ public class StatusModel {
 
     @OneToMany(mappedBy="status", fetch= FetchType.LAZY)
     private Set<OrderModel> orders = new HashSet<>();
+
+    public StatusModel(String name) {
+        this.name = name;
+    }
+
+    public StatusModel() {
+    }
 }

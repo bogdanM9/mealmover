@@ -49,7 +49,7 @@ public class OperatorService {
 
         String hashedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        operator.setRole(role);
+        operator.getRoles().add(role);
         operator.setPassword(hashedPassword);
 
         OperatorModel savedOperator = this.repository.save(operator);

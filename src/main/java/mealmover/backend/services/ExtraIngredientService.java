@@ -1,17 +1,13 @@
 package mealmover.backend.services;
 
 import lombok.RequiredArgsConstructor;
-import mealmover.backend.dtos.ExtraIngredientCreateDto;
-import mealmover.backend.dtos.IngredientCreateDto;
 import mealmover.backend.dtos.requests.ExtraIngredientCreateRequestDto;
 import mealmover.backend.dtos.responses.ExtraIngredientResponseDto;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.ExtraIngredientMapper;
 import mealmover.backend.messages.ExtraIngredientMessages;
-import mealmover.backend.models.AllergenModel;
 import mealmover.backend.models.ExtraIngredientModel;
-import mealmover.backend.models.IngredientModel;
 import mealmover.backend.repositories.ExtraIngredientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,5 +91,13 @@ public class ExtraIngredientService {
         return this.repository
             .findByName(name)
             .orElseGet(() -> this.repository.save(extraIngredientModel));
+    }
+
+    public ExtraIngredientModel getModelById(UUID extraIngredientId) {
+        return this.repository.findById(extraIngredientId)
+            .orElseThrow(() -> {
+                logger.error("Extra ingredient with id {} not found", extraIngredientId);
+                return new NotFoundException("Extra ingredient not found");
+            });
     }
 }

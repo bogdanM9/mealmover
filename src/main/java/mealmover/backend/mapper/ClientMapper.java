@@ -14,7 +14,7 @@ public interface ClientMapper {
     ClientResponseDto toDto (ClientModel model);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "addresses", ignore = true)
     @Mapping(target = "creditCards", ignore = true)

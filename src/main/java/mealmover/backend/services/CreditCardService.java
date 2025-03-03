@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import mealmover.backend.dtos.requests.CreditCardCreateRequestDto;
 import mealmover.backend.dtos.responses.CreditCardResponseDto;
 import mealmover.backend.mapper.CreditCardMapper;
-import mealmover.backend.messages.CreditCardMessages;
 import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.CreditCardModel;
 import mealmover.backend.repositories.CreditCardRepository;

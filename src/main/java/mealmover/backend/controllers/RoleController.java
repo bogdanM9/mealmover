@@ -20,12 +20,11 @@ public class RoleController {
     private final RoleService service;
     private final RoleMessages roleMessages;
 
-//    @PostMapping
-//    public ResponseEntity<RoleResponsePayload> create(@Valid @RequestBody RoleCreateRequestDto requestDto){
-//        RoleResponseDto responseDto = this.service.create(requestDto);
-//        RoleResponsePayload responsePayload = RoleResponsePayload.success(responseDto, roleMessages.created());
-//        return ResponseEntity.ok(responsePayload);
-//    }
+    @PostMapping
+    public ResponseEntity<RoleResponseDto> create(@Valid @RequestBody RoleCreateRequestDto requestDto){
+        RoleResponseDto responseDto = this.service.create(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
 
     @GetMapping
     public ResponseEntity<List<RoleResponseDto>> getAll (){
@@ -57,6 +56,12 @@ public class RoleController {
     public ResponseEntity<String> deleteAll(){
         this.service.deleteAll();
         return ResponseEntity.ok(roleMessages.deletedAll());
+    }
+
+    @GetMapping("/test/{id}")
+    public ResponseEntity<String> TestMethodByID(@PathVariable UUID id){
+        this.service.TestMethodById(id);
+        return ResponseEntity.ok("This is a test method by ID");
     }
 
 

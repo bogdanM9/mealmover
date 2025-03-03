@@ -3,7 +3,6 @@ package mealmover.backend.services;
 import lombok.RequiredArgsConstructor;
 import mealmover.backend.dtos.requests.ReviewCreateRequestDto;
 import mealmover.backend.dtos.responses.ReviewResponseDto;
-import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.ReviewMapper;
 import mealmover.backend.messages.ReviewMessages;
 import mealmover.backend.models.ClientModel;
@@ -27,28 +26,13 @@ public class ReviewService {
 
     private final ClientService clientService;
 
-    private final ProductService productService;
-
-    private final ReviewMessages messages;
-
     private static final Logger logger = LoggerFactory.getLogger(ReviewService.class);
 
-    public ReviewResponseDto create(ReviewCreateRequestDto requestDto) {
+    public ReviewResponseDto create(ReviewCreateRequestDto requestDto, ClientModel client, ProductModel product) {
         UUID clientId = requestDto.getClientId();
         UUID productId = requestDto.getProductId();
 
         logger.info("Attempting to create a review for client with id: {} and product with id: {}", clientId, productId);
-
-//        if (!this.clientService.existsById(clientId)) {
-//            throw new NotFoundException(this.messages.notFoundById());
-//        }
-//
-//        if (!this.productService.existsById(productId)) {
-//            throw new NotFoundException(this.messages.notFoundById();
-//        }
-
-        ClientModel client = this.clientService.getModelById(clientId);
-        ProductModel product = this.productService.getModelById(productId);
 
         ReviewModel review = this.mapper.toModel(requestDto);
 
@@ -67,5 +51,4 @@ public class ReviewService {
                 .map(this.mapper::toDto)
                 .toList();
     }
-
 }

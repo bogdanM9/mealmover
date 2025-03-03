@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -35,7 +37,11 @@ public class UserModel {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    @ManyToOne
-    @JoinColumn(name="role_id", nullable=false)
-    private RoleModel role;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "users_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleModel> roles = new HashSet<>();
 }

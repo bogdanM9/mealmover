@@ -67,6 +67,13 @@ public class RoleService {
                 .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
     }
 
+    public void TestMethodById(UUID id){
+        System.out.println("WHAT");
+        RoleModel roleModel=this.repository.findById(id).orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+        System.out.println("TESTING");
+        System.out.println(roleModel.getUsers()); // This is the line that causes the error -->
+        // org.hibernate.LazyInitializationException: could not initialize proxy [mealmover.backend.models.UserModel#f3b3b3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b] - no Session
+    }
     public Optional<RoleModel> getModelByName(String name){
         return this.repository.findByName(name);
     }
