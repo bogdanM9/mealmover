@@ -2,10 +2,9 @@ package mealmover.backend.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import mealmover.backend.dtos.requests.CreatePendingClientRequestDto;
+import mealmover.backend.dtos.requests.PendingClientCreateRequestDto;
 import mealmover.backend.dtos.responses.PendingClientResponseDto;
 import mealmover.backend.messages.PendingClientMessages;
-import mealmover.backend.services.EmailService;
 import mealmover.backend.services.PendingClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +19,11 @@ public class PendingClientController {
     private final PendingClientService service;
     private final PendingClientMessages messages;
 
-    @PostMapping
-    public ResponseEntity<PendingClientResponseDto> create(@Valid @RequestBody CreatePendingClientRequestDto requestDto) {
-        PendingClientResponseDto response = this.service.create(requestDto);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping
+//    public ResponseEntity<PendingClientResponseDto> create(@Valid @RequestBody PendingClientCreateRequestDto requestDto) {
+//        PendingClientResponseDto response = this.service.create(requestDto);
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping
     public ResponseEntity<List<PendingClientResponseDto>> getAll() {

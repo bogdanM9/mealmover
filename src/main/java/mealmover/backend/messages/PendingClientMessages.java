@@ -15,4 +15,7 @@ public class PendingClientMessages extends BaseMessages<PendingClientModel> {
 
     public String notfoundByEmail() { return this.notFound("email");
     }
+
+    public String notfoundByToken() { return this.notFound("token");
+    }
 }

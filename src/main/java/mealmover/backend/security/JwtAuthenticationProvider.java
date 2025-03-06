@@ -1,11 +1,11 @@
 package mealmover.backend.security;
 
 import lombok.RequiredArgsConstructor;
+import mealmover.backend.enums.Token;
 import mealmover.backend.exceptions.UnauthorizedException;
 import mealmover.backend.mapper.UserMapper;
 import mealmover.backend.models.UserModel;
 import mealmover.backend.services.UserService;
-import mealmover.backend.services.auth.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;

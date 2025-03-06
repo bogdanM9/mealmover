@@ -15,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name="users")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class UserModel {
@@ -34,7 +35,7 @@ public class UserModel {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column( unique = true)
     private String phoneNumber;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -43,5 +44,6 @@ public class UserModel {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @ToString.Exclude
     private Set<RoleModel> roles = new HashSet<>();
 }

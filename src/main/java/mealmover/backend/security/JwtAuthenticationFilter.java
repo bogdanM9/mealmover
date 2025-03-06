@@ -13,7 +13,6 @@ import mealmover.backend.enums.Token;
 import mealmover.backend.mapper.UserMapper;
 import mealmover.backend.models.UserModel;
 import mealmover.backend.services.UserService;
-import mealmover.backend.services.auth.JwtService;
 import mealmover.backend.utils.CookieUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

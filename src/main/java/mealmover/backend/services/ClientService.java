@@ -67,6 +67,26 @@ public class ClientService {
         return this.mapper.toDto(savedClientModel);
     }
 
+    public ClientResponseDto create(ClientModel clientModel) {
+        logger.info("Attempting to create a clients with email: {}", clientModel.getEmail());
+
+        if (this.userService.existsByEmail(clientModel.getEmail())) {
+            throw new ConflictException(this.messages.alreadyExistsByEmail());
+        }
+
+        RoleModel roleModel = this.roleService.getOrCreate(Role.CLIENT.toCapitalize());
+
+        clientModel.getRoles().add(roleModel);
+
+        System.out.println(clientModel);
+
+        ClientModel savedClientModel = this.repository.save(clientModel);
+
+        logger.info("Successfully created client with name: {}", clientModel.getEmail());
+
+        return this.mapper.toDto(savedClientModel);
+    }
+
     public List<ClientResponseDto> getAll() {
         logger.info("Getting all clients");
         return this.repository

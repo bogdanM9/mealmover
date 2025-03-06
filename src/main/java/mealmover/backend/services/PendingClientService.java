@@ -1,16 +1,18 @@
 package mealmover.backend.services;
 
 import lombok.RequiredArgsConstructor;
-import mealmover.backend.dtos.requests.CreatePendingClientRequestDto;
+import mealmover.backend.dtos.AuthActivateClientRequestDto;
+import mealmover.backend.dtos.requests.PendingClientCreateRequestDto;
 import mealmover.backend.dtos.responses.PendingClientResponseDto;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.PendingClientMapper;
 import mealmover.backend.messages.PendingClientMessages;
 import mealmover.backend.messages.UserMessages;
+import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.PendingClientModel;
 import mealmover.backend.repositories.PendingClientRepository;
-import mealmover.backend.services.auth.JwtService;
+import mealmover.backend.security.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,13 +29,15 @@ public class PendingClientService {
     private final UserService userService;
     private final UserMessages userMessages;
     private final EmailService emailService;
+
+    private final ClientService clientService;
     private final PasswordEncoder passwordEncoder;
     private final PendingClientMapper mapper;
     private final PendingClientMessages pendingClientMessages;
     private final PendingClientRepository repository;
     private static final Logger logger = LoggerFactory.getLogger(PendingClientService.class);
 
-    public PendingClientResponseDto create(CreatePendingClientRequestDto requestDto) {
+    public void create(PendingClientCreateRequestDto requestDto) {
         String email = requestDto.getEmail();
 
         logger.info("Attempting to create an Pending client with email: {}", email);
@@ -53,7 +57,7 @@ public class PendingClientService {
 
         UserDetails userDetails = this.mapper.toUserDetails(pendingClientModel);
 
-        String token = this.jwtService.generateActivateToken(userDetails);
+        String token = this.jwtService.generateActivateClientToken(userDetails);
 
         pendingClientModel.setToken(token);
 
@@ -65,7 +69,22 @@ public class PendingClientService {
 
         this.emailService.sendActivateAccountEmail(email, token);
 
-        return this.mapper.toDto(savedPendingClientModel);
+    }
+
+    public void activate(AuthActivateClientRequestDto token) {
+        logger.info("Attempting to activate pending client with token: {}", token);
+
+        PendingClientModel pendingClientModel = this.repository
+            .findByToken(token.getToken())
+            .orElseThrow(() -> new NotFoundException(this.pendingClientMessages.notfoundByToken()));
+
+        ClientModel clientModel = this.mapper.toClientModel(pendingClientModel);
+
+        this.clientService.create(clientModel);
+
+        this.repository.deleteById(pendingClientModel.getId());
+
+        logger.info("Successfully activated pending client with token: {}", token);
     }
 
     public List<PendingClientResponseDto> getAll() {

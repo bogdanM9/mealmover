@@ -7,7 +7,7 @@ import mealmover.backend.security.JwtAuthenticationFilter;
 import mealmover.backend.security.JwtAuthenticationProvider;
 import mealmover.backend.security.LogoutService;
 import mealmover.backend.services.UserService;
-import mealmover.backend.services.auth.JwtService;
+import mealmover.backend.security.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,8 +25,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
-        "/auth/register",
-        "/auth/activate",
+        "/auth/register-client",
+        "/auth/activate-client",
         "/auth/login",
         "/auth/forgot-password",
         "/auth/reset-password"

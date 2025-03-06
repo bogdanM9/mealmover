@@ -1,9 +1,12 @@
 package mealmover.backend.mapper;
 
-import mealmover.backend.dtos.requests.CreatePendingClientRequestDto;
+import mealmover.backend.dtos.AuthRegisterClientRequestDto;
+import mealmover.backend.dtos.requests.PendingClientCreateRequestDto;
 import mealmover.backend.dtos.responses.PendingClientResponseDto;
+import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.PendingClientModel;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,7 +16,12 @@ import java.util.Collections;
 public interface PendingClientMapper {
     PendingClientResponseDto toDto(PendingClientModel model);
 
-    PendingClientModel toModel(CreatePendingClientRequestDto dto);
+    PendingClientModel toModel(PendingClientCreateRequestDto dto);
+
+    PendingClientModel toModel(AuthRegisterClientRequestDto dto);
+
+    @Mapping(target = "id", ignore = true)
+    ClientModel toClientModel(PendingClientModel pendingClientModel);
 
     default UserDetails toUserDetails(PendingClientModel model) {
         if (model == null) {
@@ -26,4 +34,5 @@ public interface PendingClientMapper {
             .authorities(Collections.emptyList())
             .build();
     }
+
 }

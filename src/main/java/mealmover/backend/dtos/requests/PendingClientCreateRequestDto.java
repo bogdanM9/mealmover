@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePendingClientRequestDto {
+public class PendingClientCreateRequestDto {
     private String firstName;
     private String lastName;
 

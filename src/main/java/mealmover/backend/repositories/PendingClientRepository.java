@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface PendingClientRepository extends JpaRepository<PendingClientModel, UUID> {
     Optional<PendingClientRepository> findByEmail(String name);
+
+    Optional<PendingClientModel> findByToken(String token);
 }

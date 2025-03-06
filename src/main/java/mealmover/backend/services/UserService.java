@@ -5,6 +5,7 @@ import mealmover.backend.dtos.responses.UserResponseDto;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.UserMapper;
 import mealmover.backend.messages.RoleMessages;
+import mealmover.backend.models.UserModel;
 import mealmover.backend.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,14 @@ public class UserService {
             .stream()
             .map(this.mapper::toDto)
             .toList();
+    }
+
+    public UserModel getModelByEmail(String email) {
+        return this.repository
+            .findByEmail(email)
+            .orElseThrow(() -> new NotFoundException(
+                roleMessages.notFoundByEmail()
+            ));
     }
 
     public boolean existsByEmail(String email){
