@@ -1,9 +1,11 @@
 package mealmover.backend.enums;
 
 public enum Role {
+    ADMIN,
     CLIENT,
     DRIVER,
     OPERATOR;
+
 
     public String toLower() {
         return this.name().toLowerCase();

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public abstract class BaseMessages<T> {
     private final Class<T> entityClass;
-    private final MessageSource messageSource;
+    protected final MessageSource messageSource;
 
     protected BaseMessages(Class<T> entityClass, MessageSource messageSource) {
         this.entityClass = entityClass;

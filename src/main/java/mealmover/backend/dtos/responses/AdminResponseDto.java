@@ -7,11 +7,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserResponseDto {
+public class AdminResponseDto {
     private UUID id;
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNumber;
-    private RoleResponseDto role;
+    private String role;
 }

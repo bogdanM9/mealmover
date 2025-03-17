@@ -69,16 +69,21 @@ public class JwtService {
         return generateToken(userDetails, Token.RESET_PASSWORD.toCamelCase(), resetPasswordTokenExpiration);
     }
 
+    public String generateChangeEmailToken(UserDetails userDetails) {
+        return generateToken(userDetails, Token.CHANGE_EMAIL.toCamelCase(), accessTokenExpiration);
+    }
+
+
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
         return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(signingKey, SIGNATURE_ALGORITHM)
-                .compact();
+            .setClaims(extraClaims)
+            .setSubject(userDetails.getUsername())
+            .setIssuedAt(now)
+            .setExpiration(expiryDate)
+            .signWith(signingKey, SIGNATURE_ALGORITHM)
+            .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails, String tokenType) {
@@ -105,4 +110,5 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 }

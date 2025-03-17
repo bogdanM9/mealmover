@@ -7,10 +7,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {
-        AddressMapper.class,
-        CreditCardMapper.class
+    RoleMapper.class,
+    AddressMapper.class,
+    CreditCardMapper.class
 })
 public interface ClientMapper {
+    @Mapping(source="model.roles", target="role", qualifiedByName = "toFirstDto")
     ClientResponseDto toDto (ClientModel model);
 
     @Mapping(target = "id", ignore = true)

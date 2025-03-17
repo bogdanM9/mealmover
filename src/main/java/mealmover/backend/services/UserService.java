@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,6 +48,10 @@ public class UserService {
 //        return this.mapper.toDto(savedUserModel);
 //    }
 
+    public void save(UserModel userModel) {
+        this.repository.save(userModel);
+    }
+
     public List<UserResponseDto> getAll() {
         logger.info("Getting all users");
         return this.repository
@@ -56,6 +61,8 @@ public class UserService {
             .toList();
     }
 
+
+    @Transactional(readOnly = true)
     public UserModel getModelByEmail(String email) {
         return this.repository
             .findByEmail(email)
@@ -97,4 +104,5 @@ public class UserService {
         this.repository.deleteAll();
         logger.info("Users deleted!");
     }
+
 }

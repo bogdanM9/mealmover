@@ -141,11 +141,6 @@ public class ClientService {
         logger.info("Client with id {} deleted!", id);
     }
 
-    public void deleteAll() {
-        logger.info("Deleting all clients..");
-        this.repository.deleteAll();
-        logger.info("Clients deleted!");
-    }
 
     public AddressResponseDto addAddress(UUID clientId, AddressCreateRequestDto addressCreateRequestDto) {
         logger.info("Attempting to add address to client with id: {}", clientId);
@@ -165,6 +160,24 @@ public class ClientService {
         ClientModel client = this.repository.findById(creditCardDto.getClientId())
                 .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
         return this.creditCardService.create(creditCardDto, client);
+    }
+
+    public void deleteCreditCard(UUID clientId, UUID creditCardId) {
+        ClientModel client = this.repository.findById(clientId)
+                .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+        this.creditCardService.delete(client, creditCardId);
+    }
+
+    public void deleteAddress(UUID clientId, UUID addressId) {
+        ClientModel client = this.repository.findById(clientId)
+            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+        this.addressService.delete(client, addressId);
+    }
+
+    public void deleteAll() {
+        logger.info("Deleting all clients..");
+        this.repository.deleteAll();
+        logger.info("Clients deleted!");
     }
 
 

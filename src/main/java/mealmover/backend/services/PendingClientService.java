@@ -61,11 +61,9 @@ public class PendingClientService {
 
         pendingClientModel.setToken(token);
 
-        PendingClientModel savedPendingClientModel = this.repository.save(pendingClientModel);
+        this.repository.save(pendingClientModel);
 
         logger.info("Successfully created pending client with email: {}", email);
-
-        System.out.println(token);
 
         this.emailService.sendActivateAccountEmail(email, token);
 
@@ -85,6 +83,10 @@ public class PendingClientService {
         this.repository.deleteById(pendingClientModel.getId());
 
         logger.info("Successfully activated pending client with token: {}", token);
+    }
+
+    public boolean existsByEmail(String email) {
+        return this.repository.existsByEmail(email);
     }
 
     public List<PendingClientResponseDto> getAll() {

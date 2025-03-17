@@ -8,6 +8,7 @@ import mealmover.backend.security.JwtAuthenticationProvider;
 import mealmover.backend.security.LogoutService;
 import mealmover.backend.services.UserService;
 import mealmover.backend.security.JwtService;
+import mealmover.backend.security.LogoutHandlerSuccess;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,7 +30,8 @@ public class SecurityConfig {
         "/auth/activate-client",
         "/auth/login",
         "/auth/forgot-password",
-        "/auth/reset-password"
+        "/auth/reset-password",
+            "/api/**"
     };
 
     private final JwtService jwtService;
@@ -60,7 +62,7 @@ public class SecurityConfig {
                 logout ->
                     logout.logoutUrl("/auth/logout")
                         .addLogoutHandler(this.logoutService)
-                        .logoutSuccessHandler(new learnsql.backend.security.LogoutHandlerSuccess())
+                        .logoutSuccessHandler(new LogoutHandlerSuccess())
             );
 
         return http.build();

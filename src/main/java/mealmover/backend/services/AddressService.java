@@ -8,6 +8,7 @@ import mealmover.backend.mapper.AddressMapper;
 import mealmover.backend.messages.AddressMessages;
 import mealmover.backend.models.AddressModel;
 import mealmover.backend.models.ClientModel;
+import mealmover.backend.models.CreditCardModel;
 import mealmover.backend.repositories.AddressRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,5 +105,20 @@ public class AddressService {
     public AddressModel getModelById(UUID addressId) {
         return this.repository.findById(addressId)
             .orElseThrow(() -> new NotFoundException(this.messages.notFoundById()));
+    }
+
+    public void delete(ClientModel client, UUID addressId) {
+        logger.info("Attempting to delete an Address");
+
+        AddressModel address = this.repository
+                .findById(addressId)
+                .orElseThrow();
+        if (!address.getClient().equals(client)) {
+            throw new RuntimeException("Address does not belong to client");
+        }
+        this.repository.delete(address);
+
+        logger.info("Successfully deleted address");
+
     }
 }

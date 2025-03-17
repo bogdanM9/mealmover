@@ -43,4 +43,22 @@ public class EmailService {
         """.formatted(this.frontendUrl, token);
         this.sendEmail(to, subject, content);
     }
+
+    public void sendForgotPasswordEmail(String email, String token) {
+        logger.info("Sending forgot password email to {}", email);
+        String subject = "[%s] Password reset".formatted(this.appName);
+        String content = """
+            Your token is: %s
+        """.formatted(token);
+        this.sendEmail(email, subject, content);
+    }
+
+    public void sendChangeEmailEmail(String email, String newEmail, String token) {
+        logger.info("Sending change email email to {}", email);
+        String subject = "[%s] Email change".formatted(this.appName);
+        String content = """
+            In order to change your email, you need to click on next link: %s/change-email?token=%s&newEmail=%s
+        """.formatted(this.frontendUrl, token, newEmail);
+        this.sendEmail(email, subject, content);
+    }
 }

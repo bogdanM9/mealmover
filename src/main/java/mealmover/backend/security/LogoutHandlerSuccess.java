@@ -1,4 +1,4 @@
-package learnsql.backend.security;
+package mealmover.backend.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,9 +16,14 @@ public class LogoutHandlerSuccess implements LogoutSuccessHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onLogoutSuccess(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        Authentication authentication
+    ) throws IOException {
         Map<String, String> messageDetails = new HashMap<>();
-        messageDetails.put("message", "Te-ai delogat cu succes");
+
+        messageDetails.put("message", "You have logged out successfully");
         messageDetails.put("severity", Severity.SUCCESS.toLower());
 
         response.setStatus(HttpServletResponse.SC_OK);

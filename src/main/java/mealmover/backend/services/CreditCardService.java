@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +49,21 @@ public class CreditCardService {
                 .stream()
                 .map(this.creditCardMapper::toDto)
                 .toList();
+    }
+
+    public void delete(ClientModel client, UUID creditCardId) {
+        logger.info("Attempting to delete a CreditCard");
+
+        CreditCardModel creditCard = this.creditCardRepository
+                .findById(creditCardId)
+                .orElseThrow();
+
+        if (!creditCard.getClient().equals(client)) {
+            throw new RuntimeException("CreditCard does not belong to client");
+        }
+
+        this.creditCardRepository.delete(creditCard);
+
+        logger.info("Successfully deleted CreditCard");
     }
 }

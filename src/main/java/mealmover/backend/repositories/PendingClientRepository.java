@@ -12,4 +12,6 @@ public interface PendingClientRepository extends JpaRepository<PendingClientMode
     Optional<PendingClientRepository> findByEmail(String name);
 
     Optional<PendingClientModel> findByToken(String token);
+
+    boolean existsByEmail(String email);
 }
