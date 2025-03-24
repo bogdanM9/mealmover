@@ -42,30 +42,29 @@ public class EntryPointAuthentication implements AuthenticationEntryPoint {
         response.getWriter().write(jsonResponse);
     }
 
-    // TODO - schimba in engleza
     private String extractMessageFromException(AuthenticationException exception) {
         // Check if JWT exception is the cause
         Throwable cause = exception.getCause();
         if (cause instanceof ExpiredJwtException) {
-            return "Sesiunea dumneavoastră a expirat. Vă rugăm să vă autentificați din nou.";
+            return "Your session has expired. Please log in again.";
         }
 
         // Check Spring Security exceptions
         if (exception instanceof BadCredentialsException) {
-            return "Credențiale invalide.";
+            return "Invalid credentials. Please try again.";
         }
 
         if (exception instanceof InsufficientAuthenticationException) {
-            return "Trebuie să fiți autentificat pentru a accesa această resursă.";
+            return "You are not authorized to access this resource. Please log in.";
         }
 
         // Look for token expired message in the exception message
         String exceptionMessage = exception.getMessage();
 
         if (exceptionMessage != null && (exceptionMessage.contains("expired"))) {
-            return "Sesiunea dumneavoastră a expirat. Vă rugăm să vă autentificați din nou.";
+            return "Your session has expired. Please log in again.";
         }
 
-        return "Eroare de autentificare: " + exception.getMessage();
+        return "Authentication error: " + exception.getMessage();
     }
 }

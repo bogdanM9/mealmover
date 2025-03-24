@@ -3,8 +3,10 @@ package mealmover.backend.services;
 import lombok.RequiredArgsConstructor;
 import mealmover.backend.dtos.responses.UserResponseDto;
 import mealmover.backend.exceptions.NotFoundException;
+import mealmover.backend.exceptions.UnauthorizedException;
 import mealmover.backend.mapper.UserMapper;
 import mealmover.backend.messages.RoleMessages;
+import mealmover.backend.messages.UserMessages;
 import mealmover.backend.models.UserModel;
 import mealmover.backend.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository repository;
-    private final RoleMessages roleMessages;
+    private final UserMessages userMessages;
     private final UserMapper mapper;
 
     private final PasswordEncoder passwordEncoder;
@@ -66,8 +68,8 @@ public class UserService {
     public UserModel getModelByEmail(String email) {
         return this.repository
             .findByEmail(email)
-            .orElseThrow(() -> new NotFoundException(
-                roleMessages.notFoundByEmail()
+            .orElseThrow(() -> new UnauthorizedException(
+                    userMessages.invalidCredentials()
             ));
     }
 
@@ -83,7 +85,7 @@ public class UserService {
             .findById(id)
             .map(this.mapper::toDto)
             .orElseThrow(() -> new NotFoundException(
-                roleMessages.notFoundById()
+                    userMessages.notFoundById()
             ));
     }
 
@@ -91,7 +93,7 @@ public class UserService {
         logger.info("Getting user by id: {}", id);
 
         if (this.repository.findById(id).isEmpty()) {
-            throw new NotFoundException(roleMessages.notFoundById());
+            throw new NotFoundException(userMessages.notFoundById());
         }
 
         this.repository.deleteById(id);

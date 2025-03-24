@@ -12,8 +12,10 @@ import mealmover.backend.enums.Token;
 import mealmover.backend.exceptions.BadRequestException;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
+import mealmover.backend.exceptions.UnauthorizedException;
 import mealmover.backend.mapper.UserMapper;
 import mealmover.backend.messages.PendingClientMessages;
+import mealmover.backend.messages.UserMessages;
 import mealmover.backend.models.UserModel;
 import mealmover.backend.security.JwtService;
 import mealmover.backend.security.SecurityService;
@@ -27,6 +29,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthService {
     private final PendingClientService pendingClientService;
+
+    private final UserMessages userMessages;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final PendingClientMessages pendingClientMessages;
@@ -51,7 +55,7 @@ public class AuthService {
         UserModel userModel = userService.getModelByEmail(requestDto.getEmail());
 
         if (!this.passwordEncoder.matches(requestDto.getPassword(), userModel.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new UnauthorizedException(userMessages.invalidCredentials());
         }
 
         UserDetails userDetails = userMapper.toUserDetails(userModel);

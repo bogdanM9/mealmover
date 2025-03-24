@@ -45,11 +45,11 @@ public class EmailService {
     }
 
     public void sendForgotPasswordEmail(String email, String token) {
-        logger.info("Sending forgot password email to {}", email);
-        String subject = "[%s] Password reset".formatted(this.appName);
+        logger.info("Sending activate account email to {}", email);
+        String subject = "[%s] Account activation".formatted(this.appName);
         String content = """
-            Your token is: %s
-        """.formatted(token);
+            In order to reset your password, you need to click on next link: %s/reset-password?token=%s
+        """.formatted(this.frontendUrl, token);
         this.sendEmail(email, subject, content);
     }
 

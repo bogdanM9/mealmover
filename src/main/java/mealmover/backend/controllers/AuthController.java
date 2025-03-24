@@ -11,8 +11,10 @@ import mealmover.backend.dtos.requests.AuthForgotPasswordRequestDto;
 import mealmover.backend.dtos.requests.AuthLoginRequestDto;
 import mealmover.backend.dtos.requests.ResetPasswordRequestDto;
 import mealmover.backend.dtos.requests.UserChangeEmail;
+import mealmover.backend.dtos.responses.MessageResponseDto;
 import mealmover.backend.dtos.responses.UserResponseDto;
 import mealmover.backend.enums.Token;
+import mealmover.backend.messages.AuthMessages;
 import mealmover.backend.services.AuthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +27,24 @@ public class AuthController {
     @Value("${application.security.jwt.access-token.expiration}")
     private long accessTokenExpiration;
     private final AuthService authService;
+    private final AuthMessages messages;
 
     @PostMapping("/register-client")
-    public ResponseEntity<String> registerClient(@Valid @RequestBody AuthRegisterClientRequestDto requestDto) {
+    public ResponseEntity<MessageResponseDto> registerClient(@Valid @RequestBody AuthRegisterClientRequestDto requestDto) {
         authService.registerClient(requestDto);
-        return ResponseEntity.ok("CREATE LOGIN");
+        MessageResponseDto responseDto = MessageResponseDto.info(messages.registerSuccess());
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/activate-client")
-    public ResponseEntity<String> activateClient(@Valid @RequestBody AuthActivateClientRequestDto requestDto) {
+    public ResponseEntity<MessageResponseDto> activateClient(@Valid @RequestBody AuthActivateClientRequestDto requestDto) {
         authService.activateClient(requestDto);
-        return ResponseEntity.ok("ACTIVATE LOGIN");
+        MessageResponseDto responseDto = MessageResponseDto.success(messages.activateSuccess());
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(
+    public ResponseEntity<MessageResponseDto> login(
         @Valid @RequestBody AuthLoginRequestDto requestDto,
         HttpServletResponse response
     ) {
@@ -54,7 +59,9 @@ public class AuthController {
 
         response.addCookie(accessTokenCookie);
 
-        return ResponseEntity.ok("LOGIN");
+        MessageResponseDto responseDto = MessageResponseDto.success(messages.loginSuccess());
+
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/user")
@@ -63,15 +70,15 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@Valid @RequestBody AuthForgotPasswordRequestDto requestDto) {
+    public ResponseEntity<MessageResponseDto> forgotPassword(@Valid @RequestBody AuthForgotPasswordRequestDto requestDto) {
         authService.forgotPassword(requestDto);
-        return ResponseEntity.ok("FORGOT-EMAIL-PASSWORD SENT");
+        return ResponseEntity.ok(MessageResponseDto.info("Reset password link sent to your email."));
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequestDto requestDto) {
+    public ResponseEntity<MessageResponseDto> resetPassword(@Valid @RequestBody ResetPasswordRequestDto requestDto) {
         authService.resetPassword(requestDto.getToken(), requestDto.getPassword());
-        return ResponseEntity.ok("RESET-PASSWORD");
+        return ResponseEntity.ok(MessageResponseDto.info("Password reset successfully."));
     }
 
     @PostMapping("/change-email")

@@ -14,7 +14,6 @@ public class RoleMessages extends BaseMessages<RoleModel> {
         return this.alreadyExists("name");
     }
 
-
     public String notFoundByEmail() {
         return this.notFoundByEmail();
     }

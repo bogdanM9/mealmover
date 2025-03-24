@@ -66,7 +66,9 @@ public abstract class BaseMessages<T> {
         );
     }
 
+
     public String getEntityName() {
         return this.entityClass.getSimpleName().replace("Model", "");
     }
+
 }
