@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface SizeRepository extends JpaRepository<SizeModel, UUID> {
+    Optional<SizeModel> findByNameAndWeightAndPrice(String name, int weight, float price);
     Optional<SizeModel> findByName(String name);
     boolean existsByName(String name);
 

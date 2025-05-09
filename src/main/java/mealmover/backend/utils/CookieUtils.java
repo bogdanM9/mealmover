@@ -4,12 +4,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class CookieUtils {
-    public static String extractTokenFromCookies(HttpServletRequest request, String tokenName) {
+    public static String extractCookieFromRequest(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (tokenName.equals(cookie.getName())) {
+                if (cookieName.equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }

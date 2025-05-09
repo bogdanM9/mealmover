@@ -19,6 +19,8 @@ public class ProductModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    private float rating;
+
     @Column(nullable = false, length = 200)
     private String name;
 

@@ -19,4 +19,8 @@ public class ClientMessages extends BaseMessages<ClientModel>{
 
     public String notfoundByName() { return this.notFound("name");
     }
+
+    public String notFoundByEmail() {
+        return this.notFound("email");
+    }
 }

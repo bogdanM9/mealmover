@@ -111,11 +111,13 @@ public class AddressService {
         logger.info("Attempting to delete an Address");
 
         AddressModel address = this.repository
-                .findById(addressId)
-                .orElseThrow();
+            .findById(addressId)
+            .orElseThrow();
+
         if (!address.getClient().equals(client)) {
             throw new RuntimeException("Address does not belong to client");
         }
+
         this.repository.delete(address);
 
         logger.info("Successfully deleted address");

@@ -43,7 +43,7 @@ public class OperatorService {
             throw new ConflictException(this.messages.alreadyExistsByEmail());
         }
 
-        RoleModel role = this.roleService.getOrCreate(Role.OPERATOR.toCapitalize());
+        RoleModel role = this.roleService.getOrCreate(Role.OPERATOR.toConvert());
 
         OperatorModel operator = this.mapper.toModel(requestDto);
 

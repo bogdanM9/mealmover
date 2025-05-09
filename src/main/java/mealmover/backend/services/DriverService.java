@@ -40,7 +40,7 @@ public class DriverService {
             throw new ConflictException(this.messages.alreadyExistsByEmail());
         }
 
-        RoleModel role = this.roleService.getOrCreate(Role.DRIVER.toCapitalize());
+        RoleModel role = this.roleService.getOrCreate(Role.DRIVER.toConvert());
 
         DriverModel driver = this.mapper.toModel(requestDto);
 

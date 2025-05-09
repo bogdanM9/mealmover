@@ -16,6 +16,7 @@ import mealmover.backend.repositories.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -27,19 +28,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
     private final SizeService sizeService;
-
-    private final ClientRepository clientRepository;
-
-    private final  ProductRepository productRepository;
+    private final ReviewService reviewService;
     private final CategoryService categoryService;
     private final IngredientService ingredientService;
+
+    private final ClientService clientService;
     private final FileStorageService fileStorageService;
     private final ExtraIngredientService extraIngredientService;
-    private final ReviewService reviewService;
     private final ProductMapper mapper;
+    private final ProductMessages messages;
     private final ProductRepository repository;
-
-    private final ProductMessages message;
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     public ProductResponseDto create(MultipartFile image, ProductCreateRequestDto productCreateRequestDto) {
@@ -92,14 +90,18 @@ public class ProductService {
     }
 
     public ReviewResponseDto addReview(ReviewCreateRequestDto reviewCreateRequestDto) {
-        ClientModel client = this.clientRepository.findById(reviewCreateRequestDto.getClientId())
-        .orElseThrow(() -> new NotFoundException(this.message.notfoundById()));
+        if (this.reviewService.existsByClientIdAndProductId(reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId())) {
+            logger.error("Client with id {} already reviewed product with id {}", reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId());
+            throw new ConflictException("You already reviewed this product");
+        }
 
-        ProductModel product = this.productRepository.findById(reviewCreateRequestDto.getProductId())
-                .orElseThrow(() -> new NotFoundException(this.message.notfoundById()));
+        ClientModel client = this.clientService.getModelById(reviewCreateRequestDto.getClientId());
 
+        ProductModel product = this.repository
+            .findById(reviewCreateRequestDto.getProductId())
+            .orElseThrow(() -> new NotFoundException(this.messages.notfoundById()));
 
-        return reviewService.create(reviewCreateRequestDto, client, product);
+        return this.reviewService.create(reviewCreateRequestDto, client, product);
     }
 
 
@@ -115,12 +117,27 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
-
+    @Transactional(readOnly = true)
     public Set<ProductResponseDto> getAll() {
-        return this.repository.findAll()
+        List<ProductModel> models = this.repository.findAll();
+
+        return models.stream().map(model -> {
+            ProductResponseDto dto = this.mapper.toDto(model);
+
+            if(model.getReviews().isEmpty()) {
+                dto.setRating(0f);
+                return dto;
+            }
+
+            float rating = model.getReviews()
                 .stream()
-                .map(this.mapper::toDto)
-                .collect(Collectors.toSet());
+                .map(ReviewModel::getRating)
+                .reduce(0f, Float::sum) / model.getReviews().size();
+
+            dto.setRating(rating);
+
+            return dto;
+        }).collect(Collectors.toSet());
     }
 
     public void deleteById(UUID id) {
@@ -139,6 +156,4 @@ public class ProductService {
     public SizeModel getSizeModelById(UUID productSizeId) {
         return this.sizeService.getModelById(productSizeId);
     }
-
-
 }

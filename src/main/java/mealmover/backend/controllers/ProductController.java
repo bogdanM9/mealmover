@@ -28,6 +28,7 @@ public class ProductController {
         @RequestParam("image") MultipartFile image,
         @RequestParam("data") String data
     ) {
+        System.out.println(data);
         ProductCreateRequestDto requestDto = this.mapperService.parseProductData(data);
         ProductResponseDto responseDto = this.productService.create(image, requestDto);
         return ResponseEntity.ok(responseDto);

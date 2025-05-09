@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import mealmover.backend.services.ProductService;
 
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class ProductSizeModel {
         this.product = product;
     }
 
-    public ProductSizeModel() {
+    public  ProductSizeModel(){
 
     }
 }

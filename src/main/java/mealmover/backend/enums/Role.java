@@ -1,17 +1,18 @@
 package mealmover.backend.enums;
 
+import mealmover.backend.utils.StringUtils;
+
 public enum Role {
     ADMIN,
     CLIENT,
     DRIVER,
     OPERATOR;
 
-
-    public String toLower() {
-        return this.name().toLowerCase();
+    public String toConvert() {
+        return StringUtils.toConvert(this.name());
     }
 
-    public String toCapitalize() {
-        return this.name().substring(0, 1).toUpperCase() + this.name().substring(1).toLowerCase();
+    public static Role fromConvert(String str) {
+        return Role.valueOf(StringUtils.fromConvert(str));
     }
 }

@@ -46,4 +46,13 @@ public class UserModel {
     )
     @ToString.Exclude
     private Set<RoleModel> roles = new HashSet<>();
+
+    public void addRole(RoleModel role) {
+        if (role != null) {
+            if (this.roles == null) {
+                this.roles = new HashSet<>();
+            }
+            this.roles.add(role);
+        }
+    }
 }

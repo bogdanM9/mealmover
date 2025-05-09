@@ -82,14 +82,16 @@ public class SizeService {
 
     public SizeModel getOrCreate(SizeCreateDto sizeCreateDto) {
         String name = sizeCreateDto.getName();
+        int weight = sizeCreateDto.getWeight();
+        float price = sizeCreateDto.getPrice();
 
         logger.info("Attempting to get or create size with name: {}", name);
 
         SizeModel sizeModel = this.mapper.toModel(sizeCreateDto);
 
         return this.repository
-                .findByName(name)
-                .orElseGet(() -> this.repository.save(sizeModel));
+            .findByNameAndWeightAndPrice(name, weight, price)
+            .orElseGet(() -> this.repository.save(sizeModel));
     }
 
     public void deleteOrphans() {

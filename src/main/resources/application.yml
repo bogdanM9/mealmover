@@ -32,13 +32,13 @@ spring:
 application:
   security:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      access-token:
-        expiration: 86400000 # a day
-      activate-client-token:
-        expiration: 86400000 # a day
-      reset-password-token:
-        expiration: 3600000 # 1 hour
+      secret: iV83M9R8lYnqnHTRrJDSvSzkPxbJwxkWvImXlLDnXCYUoR7K4jnznHuKLDfSrDfB
+      tokens:
+        access:
+          expiration: 86400000  # 24 hours in milliseconds
+        registration-client:
+          expiration: 86400000  # 24 hours (adjust as needed)
+        reset-password:
+          expiration: 3600000   # 1 hour (typically shorter for security)
 file:
-  storage:
-    location: D:\MealMover\backend\uploads
+  upload-dir: D:\MealMover\backend\uploads

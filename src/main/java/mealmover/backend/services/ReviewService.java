@@ -51,4 +51,16 @@ public class ReviewService {
                 .map(this.mapper::toDto)
                 .toList();
     }
+
+    public List<ReviewModel> getReviewsByProductId(UUID id) {
+        logger.info("Attempting to get all reviews for product with id: {}", id);
+
+        return this.repository.findByProductId(id);
+    }
+
+    public boolean existsByClientIdAndProductId(UUID clientId, UUID productId) {
+        logger.info("Checking if review exists for client with id: {} and product with id: {}", clientId, productId);
+
+        return this.repository.existsByClientIdAndProductId(clientId, productId);
+    }
 }

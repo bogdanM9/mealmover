@@ -26,19 +26,17 @@ public class ClientController {
     private final ClientService service;
     private final ClientMessages messages;
 
-
     @PostMapping
     public ResponseEntity<ClientResponseDto> create(@Valid @RequestBody ClientCreateRequestDto requestDto) {
         ClientResponseDto response = this.service.create(requestDto);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{id}/addresses")
+    @PostMapping("/add-address")
     public ResponseEntity<AddressResponseDto> addAddress(
-        @PathVariable UUID id,
         @Valid @RequestBody AddressCreateRequestDto requestDto
     ) {
-        return ResponseEntity.ok(this.service.addAddress(id, requestDto));
+        return ResponseEntity.ok(this.service.addAddress(requestDto));
     }
 
     @GetMapping
@@ -46,17 +44,16 @@ public class ClientController {
         return ResponseEntity.ok(this.service.getAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDto> getById(@PathVariable UUID id) {
-        return ResponseEntity.ok(this.service.getById(id));
+    @GetMapping("/client-info")
+        public ResponseEntity<ClientResponseDto> getClient() {
+        return ResponseEntity.ok(this.service.getClient());
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ClientResponseDto> updateById(
-            @PathVariable UUID id,
-            @Valid @RequestBody ClientUpdateRequestDto requestDto
+        @PathVariable UUID id,
+        @Valid @RequestBody ClientUpdateRequestDto requestDto
     ){
-
         return ResponseEntity.ok(this.service.updateById(id, requestDto));
     }
 
@@ -72,11 +69,9 @@ public class ClientController {
         return ResponseEntity.ok(messages.deletedAll());
     }
 
-
     @PostMapping("/add/credit-cards")
     public ResponseEntity<CreditCardResponseDto> create(@Valid @RequestBody CreditCardCreateRequestDto requestDto) {
         CreditCardResponseDto response = this.service.addCreditCard(requestDto);
         return ResponseEntity.ok(response);
     }
-
 }

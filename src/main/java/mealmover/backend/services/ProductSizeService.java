@@ -11,12 +11,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ProductSizeService {
-    private final ProductService productService;
-    private final SizeService sizeService;
-    private final ProductSizeRepository productSizeRepository;
+    private final ProductSizeRepository repository;
 
     public ProductSizeModel getModelById(UUID id) {
-        return this.productSizeRepository.findById(id)
+        return this.repository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product size not found"));
     }
 }

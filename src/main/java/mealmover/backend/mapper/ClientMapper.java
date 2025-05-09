@@ -3,6 +3,7 @@ package mealmover.backend.mapper;
 import mealmover.backend.dtos.requests.ClientCreateRequestDto;
 import mealmover.backend.dtos.responses.ClientResponseDto;
 import mealmover.backend.models.ClientModel;
+import mealmover.backend.models.PendingClientModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,6 +13,9 @@ import org.mapstruct.Mapping;
     CreditCardMapper.class
 })
 public interface ClientMapper {
+    @Mapping(target = "id", ignore = true)
+    ClientModel toModel(PendingClientModel model);
+
     @Mapping(source="model.roles", target="role", qualifiedByName = "toFirstDto")
     ClientResponseDto toDto (ClientModel model);
 

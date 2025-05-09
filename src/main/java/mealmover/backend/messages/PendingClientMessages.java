@@ -14,15 +14,15 @@ public class PendingClientMessages extends BaseMessages<PendingClientModel> {
     public String alreadyExistsByEmail() { return this.alreadyExists("email");
     }
 
-    public String notfoundByEmail() { return this.notFound("email");
+    public String notFoundByEmail() { return this.notFound("email");
     }
 
-    public String notfoundByToken() { return this.notFound("token");
+    public String notFoundByToken() { return this.notFound("token");
     }
 
     public String activateFirst() {
         return messageSource.getMessage(
-            "pending_client.activate_first",
+            "pending_client.activate",
             new Object[]{},
             LocaleContextHolder.getLocale()
         );

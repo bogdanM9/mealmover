@@ -16,4 +16,6 @@ public class ProductResponseDto {
     private Set<SizeResponseDto> sizes;
     private Set<IngredientResponseDto> ingredients;
     private Set<ExtraIngredientResponseDto> extraIngredients;
+    private float rating;
+    private String imageUri;
 }

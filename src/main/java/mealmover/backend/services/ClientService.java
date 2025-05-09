@@ -17,13 +17,14 @@ import mealmover.backend.messages.ClientMessages;
 import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.RoleModel;
 import mealmover.backend.repositories.ClientRepository;
+import mealmover.backend.security.SecurityUtils;
+import mealmover.backend.security.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -37,7 +38,7 @@ public class ClientService {
     private final RoleService roleService;
     private final UserService userService;
     private final ClientRepository repository;
-
+    private final SecurityUtils securityUtils;
     private final CreditCardService creditCardService;
     private final PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(ClientService.class);
@@ -51,7 +52,7 @@ public class ClientService {
             throw new ConflictException(this.messages.alreadyExistsByEmail());
         }
 
-        RoleModel roleModel = this.roleService.getOrCreate(Role.CLIENT.toCapitalize());
+        RoleModel roleModel = this.roleService.getOrCreate(Role.CLIENT.toConvert());
 
         ClientModel clientModel = this.mapper.toModel(requestDto);
 
@@ -74,7 +75,7 @@ public class ClientService {
             throw new ConflictException(this.messages.alreadyExistsByEmail());
         }
 
-        RoleModel roleModel = this.roleService.getOrCreate(Role.CLIENT.toCapitalize());
+        RoleModel roleModel = this.roleService.getOrCreate(Role.CLIENT.toConvert());
 
         clientModel.getRoles().add(roleModel);
 
@@ -99,9 +100,18 @@ public class ClientService {
     public ClientResponseDto getById(UUID id) {
         logger.info("Getting client by id: {}", id);
         return this.repository
-                .findById(id)
-                .map(this.mapper::toDto)
-                .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+            .findById(id)
+            .map(this.mapper::toDto)
+            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+    }
+
+    public ClientResponseDto getClient() {
+        logger.info("Getting client info...");
+        UserDetailsImpl userDetailsImpl = this.securityUtils.getCurrentUser();
+        return this.repository
+            .findByEmail(userDetailsImpl.getUsername())
+            .map(this.mapper::toDto)
+            .orElseThrow(() -> new NotFoundException(messages.notFoundByEmail()));
     }
 
     public ClientModel getModelById(UUID id) {
@@ -142,23 +152,23 @@ public class ClientService {
     }
 
 
-    public AddressResponseDto addAddress(UUID clientId, AddressCreateRequestDto addressCreateRequestDto) {
-        logger.info("Attempting to add address to client with id: {}", clientId);
+    public AddressResponseDto addAddress( AddressCreateRequestDto addressCreateRequestDto) {
+        logger.info("Attempting to add address to client");
 
-        ClientModel client = this.repository
-            .findById(clientId)
-            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+        String email = this.securityUtils.getCurrentUser().getUsername();
+        ClientModel loggedInClient = this.repository.findByEmail(email)
+            .orElseThrow(() -> new NotFoundException(messages.notFoundByEmail()));
 
-        AddressResponseDto responseDto = this.addressService.create(client, addressCreateRequestDto);
+        AddressResponseDto responseDto = this.addressService.create(loggedInClient, addressCreateRequestDto);
 
-        logger.info("Successfully added address with to clientID: {} ", clientId);
+        logger.info("Successfully added address with email: {}", email);
 
         return responseDto;
     }
 
     public CreditCardResponseDto addCreditCard(CreditCardCreateRequestDto creditCardDto) {
         ClientModel client = this.repository.findById(creditCardDto.getClientId())
-                .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
+            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
         return this.creditCardService.create(creditCardDto, client);
     }
 
@@ -179,6 +189,7 @@ public class ClientService {
         this.repository.deleteAll();
         logger.info("Clients deleted!");
     }
+
 
 
 }

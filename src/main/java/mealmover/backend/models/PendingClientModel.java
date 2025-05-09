@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -30,4 +31,12 @@ public class PendingClientModel {
 
     @Column(nullable=false, length=1000)
     private String token;
+
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

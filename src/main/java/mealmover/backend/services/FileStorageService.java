@@ -18,7 +18,7 @@ import java.util.UUID;
 public class FileStorageService {
     private final Path imageStoreLocation;
 
-    public FileStorageService(@Value("${file.storage.location}") String fileStoragePath) {
+    public FileStorageService(@Value("${file.upload-dir}") String fileStoragePath) {
         try {
             Path fileStorageLocation = Paths.get(fileStoragePath).toAbsolutePath().normalize();
             this.imageStoreLocation = fileStorageLocation.resolve("images");

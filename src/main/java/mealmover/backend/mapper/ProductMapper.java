@@ -11,7 +11,8 @@ import org.mapstruct.Mapping;
         SizeMapper.class,
         CategoryMapper.class,
         IngredientMapper.class,
-        ExtraIngredientMapper.class
+        ExtraIngredientMapper.class,
+        ReviewMapper.class
     }
 )
 public interface ProductMapper {

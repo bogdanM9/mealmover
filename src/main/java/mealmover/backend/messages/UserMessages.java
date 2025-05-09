@@ -2,6 +2,7 @@ package mealmover.backend.messages;
 
 import mealmover.backend.models.UserModel;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
@@ -21,6 +22,10 @@ public class UserMessages extends BaseMessages<UserModel> {
     }
 
     public String invalidCredentials() {
-        return messageSource.getMessage("auth.login.invalid-credentials", null, Locale.getDefault());
+        return messageSource.getMessage(
+        "auth.login.invalid_credentials",
+            new Object[]{},
+            LocaleContextHolder.getLocale()
+        );
     }
 }

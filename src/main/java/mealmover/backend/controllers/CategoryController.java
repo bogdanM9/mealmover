@@ -46,5 +46,4 @@ public class CategoryController {
         this.service.deleteAll();
         return ResponseEntity.ok(messages.deletedAll());
     }
-
 }

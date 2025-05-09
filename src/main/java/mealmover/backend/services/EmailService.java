@@ -35,7 +35,7 @@ public class EmailService {
     }
 
     @Async
-    public void sendActivateAccountEmail(String to, String token) {
+    public void sendActivateClientAccountEmail(String to, String token) {
         logger.info("Sending activate account email to {}", to);
         String subject = "[%s] Account activation".formatted(this.appName);
         String content = """
