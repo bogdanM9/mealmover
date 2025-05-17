@@ -1,7 +1,9 @@
 package mealmover.backend.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -33,18 +35,22 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String jwt = parseJwt(request);
 
-        if (jwt != null && validateAccessToken(jwt)) {
-            String username = this.jwtUtils.getUsernameFromToken(jwt);
+        if (jwt != null) {
+            if (validateAccessToken(jwt)) {
+                String username = this.jwtUtils.getUsernameFromToken(jwt);
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+                );
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                CookieUtils.clearAccessTokenCookie(response);
+            }
         }
 
         filterChain.doFilter(request, response);
@@ -57,13 +63,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
      * @return true if token is valid and of type ACCESS
      */
     private boolean validateAccessToken(String token) {
-        // Validate token integrity
-        this.jwtUtils.validateToken(token);
-
-        // Ensure it's an access token (not a registration or reset token)
-        Token tokenType = this.jwtUtils.getTokenType(token);
-
-        return tokenType == Token.ACCESS;
+        try {
+            this.jwtUtils.validateToken(token);
+            Token tokenType = this.jwtUtils.getTokenType(token);
+            return tokenType == Token.ACCESS;
+        } catch(ExpiredJwtException e) {
+            log.error("JWT token expired: {}", e.getMessage());
+            return false;
+        }
     }
 
     private String parseJwt(HttpServletRequest request) {
@@ -73,6 +80,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return headerAuth.substring(7);
         }
 
-        return CookieUtils.extractCookieFromRequest(request, Token.ACCESS.toString());
+        return CookieUtils.extractAccessTokenCookie(request);
     }
 }

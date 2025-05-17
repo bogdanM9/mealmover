@@ -26,12 +26,7 @@ public class IngredientModel {
     @ToString.Exclude
     private Set<ProductModel> products = new HashSet<>();
 
-    @ManyToMany(
-        cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-        }
-    )
+    @ManyToMany()
     @JoinTable(
         name = "ingredients_allergens",
         joinColumns = @JoinColumn(name = "ingredient_id"),

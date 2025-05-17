@@ -39,7 +39,7 @@ public class OrderModel {
     @JoinColumn(name = "address_id", nullable = false)
     private AddressModel address;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<OrderProductModel> orderProducts = new HashSet<>();
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

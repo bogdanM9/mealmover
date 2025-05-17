@@ -8,10 +8,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
-
     @Mapping(target = "id", ignore = true)
     AddressModel toModel (AddressCreateRequestDto dto);
 
     AddressResponseDto toDto (AddressModel model);
-
 }

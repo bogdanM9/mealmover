@@ -1,4 +1,4 @@
-package mealmover.backend.mapper;
-
-public interface ProductSizeMapper {
-}
+//package mealmover.backend.mapper;
+//
+//public interface ProductSizeMapper {
+//}

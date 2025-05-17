@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import mealmover.backend.services.ProductService;
 
 import java.util.UUID;
 
@@ -26,13 +25,4 @@ public class ProductSizeModel {
     @JoinColumn(name="product_id", nullable=false)
     @ToString.Exclude
     private ProductModel product;
-
-    public ProductSizeModel(SizeModel size, ProductModel product) {
-        this.size = size;
-        this.product = product;
-    }
-
-    public  ProductSizeModel(){
-
-    }
 }

@@ -45,8 +45,8 @@ public class EmailService {
     }
 
     public void sendForgotPasswordEmail(String email, String token) {
-        logger.info("Sending activate account email to {}", email);
-        String subject = "[%s] Account activation".formatted(this.appName);
+        logger.info("Sending reset password email to {}", email);
+        String subject = "[%s] Reset password".formatted(this.appName);
         String content = """
             In order to reset your password, you need to click on next link: %s/reset-password?token=%s
         """.formatted(this.frontendUrl, token);

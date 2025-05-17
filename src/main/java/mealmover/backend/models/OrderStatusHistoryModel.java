@@ -30,12 +30,4 @@ public class OrderStatusHistoryModel {
     protected void onCreate() {
         this.changedAt = java.time.LocalDateTime.now();
     }
-
-    public OrderStatusHistoryModel(OrderModel orderModel, StatusModel statusModel) {
-        this.order = orderModel;
-        this.status = statusModel;
-    }
-
-    public OrderStatusHistoryModel() {
-    }
 }

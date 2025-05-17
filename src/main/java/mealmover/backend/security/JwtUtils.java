@@ -27,7 +27,7 @@ public class JwtUtils {
     private int jwtResetPasswordTokenExpiration;
 
     @Value("${application.security.jwt.tokens.registration-client.expiration}")
-    private int jwtRegistrationTokenClientExpiration;
+    private int jwtRegistrationTokenExpiration;
 
     /**
      * Generate JWT token for authentication
@@ -53,20 +53,20 @@ public class JwtUtils {
     /**
      * Generate token for registration confirmation
      */
-    public String generateRegistrationClientToken(String email) {
+    public String generateRegistrationToken(String email) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("type", Token.REGISTRATION_CLIENT.name());
-        return generateToken(claims, email, jwtRegistrationTokenClientExpiration);
+        claims.put("type", Token.REGISTRATION.name());
+        return generateToken(claims, email, jwtRegistrationTokenExpiration);
     }
 
     /**
      * Generate token for password reset
      */
-    public String generatePasswordResetToken(String email, UUID userId) {
+    public String generateResetPasswordToken(String email, UUID userId) {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("id", userId);
-        claims.put("type", Token.PASSWORD_RESET.name());
+        claims.put("type", Token.RESET_PASSWORD.name());
 
         return generateToken(claims, email, jwtResetPasswordTokenExpiration);
     }

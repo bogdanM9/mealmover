@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
-    RoleResponseDto toDto (RoleModel model);
+    RoleResponseDto toDto(RoleModel model);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "users", ignore = true)
@@ -22,6 +22,6 @@ public interface RoleMapper {
         if(roles == null || roles.isEmpty()) {
             return null;
         }
-        return toDto(roles.iterator().next());
+        return toDto(roles.stream().findFirst().orElse(null));
     }
 }

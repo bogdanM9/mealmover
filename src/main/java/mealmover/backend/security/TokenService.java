@@ -19,14 +19,14 @@ public class TokenService {
      * Generate a token for account registration confirmation
      */
     public String generateRegistrationClientToken(String email) {
-        return this.jwtUtils.generateRegistrationClientToken(email);
+        return this.jwtUtils.generateRegistrationToken(email);
     }
 
     /**
      * Generate a token for password reset
      */
-    public String generatePasswordResetToken(String email, UUID userId) {
-        return this.jwtUtils.generatePasswordResetToken(email, userId);
+    public String generateResetPasswordToken(String email, UUID userId) {
+        return this.jwtUtils.generateResetPasswordToken(email, userId);
     }
 
     /**
@@ -39,27 +39,19 @@ public class TokenService {
     /**
      * Validate a registration token
      */
-    public String validateRegistrationClientToken(String token) {
+    public String validateRegistrationToken(String token) {
         this.jwtUtils.validateToken(token);
-        this.jwtUtils.validateTokenType(token, Token.REGISTRATION_CLIENT);
-        return this.jwtUtils.getUsernameFromToken(token);
-    }
-
-    /**
-     * Validate an application token
-     */
-    public String validateApplicationToken(String token) {
-        this.jwtUtils.validateToken(token);
-        this.jwtUtils.validateTokenType(token, Token.APPLICATION);
+        this.jwtUtils.validateTokenType(token, Token.REGISTRATION);
         return this.jwtUtils.getUsernameFromToken(token);
     }
 
     /**
      * Validate a password reset token
      */
-    public void validatePasswordResetToken(String token) {
+    public String validateResetPasswordToken(String token) {
         this.jwtUtils.validateToken(token);
-        this.jwtUtils.validateTokenType(token, Token.PASSWORD_RESET);
+        this.jwtUtils.validateTokenType(token, Token.RESET_PASSWORD);
+        return this.jwtUtils.getUsernameFromToken(token);
     }
 
     /**

@@ -3,21 +3,15 @@ package mealmover.backend.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mealmover.backend.dtos.AuthActivateClientRequestDto;
-import mealmover.backend.dtos.requests.PendingClientCreateRequestDto;
+import mealmover.backend.constants.PendingClientConstants;
 import mealmover.backend.dtos.responses.PendingClientResponseDto;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.PendingClientMapper;
-import mealmover.backend.messages.PendingClientMessages;
-import mealmover.backend.messages.UserMessages;
 import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.PendingClientModel;
 import mealmover.backend.repositories.PendingClientRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +24,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PendingClientService {
     private final UserService userService;
-    private final UserMessages userMessages;
     private final EmailService emailService;
     private final ClientService clientService;
     private final PasswordEncoder passwordEncoder;
-    private final PendingClientMapper mapper;
-    private final PendingClientMessages pendingClientMessages;
-    private final PendingClientRepository repository;
+    private final PendingClientMapper pendingClientMapper;
+    private final PendingClientRepository pendingClientRepository;
 
 //    public void create(PendingClientCreateRequestDto requestDto) {
 //        String email = requestDto.getEmail();
@@ -76,41 +68,41 @@ public class PendingClientService {
 
         log.info("Attempting to create pending client with email {}", email);
 
-        if(this.repository.existsByEmail(email)) {
+        if(this.pendingClientRepository.existsByEmail(email)) {
             throw new ConflictException("There is already an pending client registered with that email.");
         }
 
-        PendingClientModel savedModel = this.repository.save(model);
+        PendingClientModel savedModel = this.pendingClientRepository.save(model);
 
         log.info("Successfully created pending client with email {}", email);
 
         return savedModel;
     }
 
-    public void activate(AuthActivateClientRequestDto token) {
-        log.info("Attempting to activate pending client with token: {}", token);
-
-        PendingClientModel pendingClientModel = this.repository
-            .findByToken(token.getToken())
-            .orElseThrow(() -> new NotFoundException(this.pendingClientMessages.notFoundByToken()));
-
-        ClientModel clientModel = this.mapper.toClientModel(pendingClientModel);
-
-        this.clientService.create(clientModel);
-
-        this.repository.deleteById(pendingClientModel.getId());
-
-        log.info("Successfully activated pending client with token: {}", token);
-    }
+//    public void activate(AuthActivateClientRequestDto token) {
+//        log.info("Attempting to activate pending client with token: {}", token);
+//
+//        PendingClientModel pendingClientModel = this.repository
+//            .findByToken(token.getToken())
+//            .orElseThrow(() -> new NotFoundException(this.pendingClientMessages.notFoundByToken()));
+//
+//        ClientModel clientModel = this.mapper.toClientModel(pendingClientModel);
+//
+//        this.clientService.create(clientModel);
+//
+//        this.repository.deleteById(pendingClientModel.getId());
+//
+//        log.info("Successfully activated pending client with token: {}", token);
+//    }
 
     public boolean existsByEmail(String email) {
-        return this.repository.existsByEmail(email);
+        return this.pendingClientRepository.existsByEmail(email);
     }
 
     public PendingClientModel getModelByEmail(String email) {
-        return this.repository
+        return this.pendingClientRepository
             .findByEmail(email)
-            .orElseThrow(() -> new NotFoundException(this.pendingClientMessages.notFoundByEmail()));
+            .orElseThrow(() -> new NotFoundException(PendingClientConstants.NOT_FOUND_BY_EMAIL));
     }
 
 //    @Scheduled(cron = "0 0 0 * * ?")
@@ -121,43 +113,43 @@ public class PendingClientService {
 //        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(24);
         LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(5);
 
-        int deletedCount = this.repository.deleteByCreatedAtBefore(cutoffTime);
+        int deletedCount = this.pendingClientRepository.deleteByCreatedAtBefore(cutoffTime);
 
         log.info("Deleted {} old pending clients", deletedCount);
     }
 
     public List<PendingClientResponseDto> getAll() {
         log.info("Getting all pending clients");
-        return this.repository
+        return this.pendingClientRepository
             .findAll()
             .stream()
-            .map(this.mapper::toDto)
+            .map(this.pendingClientMapper::toDto)
             .toList();
     }
 
     public PendingClientResponseDto getById(UUID id) {
         log.info("Getting pending client by id: {}", id);
-        return this.repository
+        return this.pendingClientRepository
             .findById(id)
-            .map(this.mapper::toDto)
-            .orElseThrow(() -> new NotFoundException(pendingClientMessages.notFoundById()));
+            .map(this.pendingClientMapper::toDto)
+            .orElseThrow(() -> new NotFoundException(PendingClientConstants.NOT_FOUND_BY_NAME));
     }
 
     public void deleteById(UUID id) {
         log.info("Getting pending clients by id: {}", id);
 
-        if (this.repository.findById(id).isEmpty()) {
-            throw new NotFoundException(pendingClientMessages.notFoundById());
+        if (this.pendingClientRepository.findById(id).isEmpty()) {
+            throw new NotFoundException(PendingClientConstants.NOT_FOUND_BY_NAME);
         }
 
-        this.repository.deleteById(id);
+        this.pendingClientRepository.deleteById(id);
 
         log.info("pending client with id {} deleted!", id);
     }
 
     public void deleteAll() {
         log.info("Deleting all pending clients..");
-        this.repository.deleteAll();
+        this.pendingClientRepository.deleteAll();
         log.info("pending clients!");
     }
 }

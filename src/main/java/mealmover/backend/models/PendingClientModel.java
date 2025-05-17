@@ -1,7 +1,6 @@
 package mealmover.backend.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,20 +16,20 @@ public class PendingClientModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "first_name", nullable=false, length=500)
+    @Column(name = "first_name", nullable=false)
     private String firstName;
 
-    @Column(name = "last_name", nullable=false, length=500)
+    @Column(name = "last_name", nullable=false)
     private String lastName;
 
-    @Column(nullable=false, length=150)
+    @Column(nullable=false)
     private String email;
 
-    @Column(nullable=false, length=100)
+    @Column(nullable=false)
     private String password;
 
-    @Column(nullable=false, length=1000)
-    private String token;
+    @Column(name = "phone_number", nullable=false)
+    private String phoneNumber;
 
     @Column(name="created_at")
     private LocalDateTime createdAt;

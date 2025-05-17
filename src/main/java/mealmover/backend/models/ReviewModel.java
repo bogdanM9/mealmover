@@ -16,13 +16,13 @@ public class ReviewModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable=false, length=500)
+    @Column(nullable=false)
     private String title;
 
     @Column(nullable=false)
     private float rating;
 
-    @Column(nullable=false, length=2000)
+    @Column(nullable=false)
     private String text;
 
     @Column(name="created_at")

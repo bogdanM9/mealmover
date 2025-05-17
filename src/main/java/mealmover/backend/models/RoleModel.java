@@ -23,10 +23,4 @@ public class RoleModel {
     @ManyToMany(mappedBy = "roles")
     @ToString.Exclude
     private Set<UserModel> users = new HashSet<>();
-
-    public RoleModel() {}
-
-    public RoleModel(String name) {
-        this.name = name;
-    }
 }

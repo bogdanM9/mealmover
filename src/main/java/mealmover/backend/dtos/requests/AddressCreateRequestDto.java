@@ -1,17 +1,13 @@
 package mealmover.backend.dtos.requests;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class AddressCreateRequestDto {
-
     private String county;
     private String city;
-    private String details;
+    private String street;
+    private Integer number;
     private String postcode;
-    private double lat;
-    private double lng;
-
+    private String details;
 }

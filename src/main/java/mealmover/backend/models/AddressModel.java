@@ -17,23 +17,23 @@ public class AddressModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String county;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
+    private String street;
+
+    @Column(nullable = false)
+    private int number;
+
+    @Column(nullable = false)
     private String city;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false)
     private String details;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String postcode;
-
-    @Column(name = "lat", nullable = false)
-    private double lat;
-
-    @Column(name = "lng", nullable = false)
-    private double lng;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
