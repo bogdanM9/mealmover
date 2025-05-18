@@ -24,13 +24,13 @@ public class DataSeeder implements CommandLineRunner {
     private void seedRoles() {
         log.info("Seeding roles...");
 
-        RoleCreateRequestDto requestDtoClient = RoleCreateRequestDto
+        RoleCreateRequestDto requestDto = RoleCreateRequestDto
             .builder()
             .name(Role.CLIENT.toCapitalize())
             .build();
 
         if(!this.roleService.existsByName(Role.CLIENT.toCapitalize())) {
-            this.roleService.create(requestDtoClient);
+            this.roleService.create(requestDto);
         }
 
         log.info("Roles seeding completed.");

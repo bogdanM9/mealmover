@@ -4,13 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mealmover.backend.constants.ClientConstants;
 import mealmover.backend.dtos.requests.AddressCreateRequestDto;
+import mealmover.backend.dtos.requests.CreditCardCreateRequestDto;
 import mealmover.backend.dtos.responses.AddressResponseDto;
+import mealmover.backend.dtos.responses.CreditCardResponseDto;
 import mealmover.backend.enums.Role;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.AddressMapper;
+import mealmover.backend.mapper.CreditCardMapper;
 import mealmover.backend.models.AddressModel;
 import mealmover.backend.models.ClientModel;
+import mealmover.backend.models.CreditCardModel;
 import mealmover.backend.models.RoleModel;
 import mealmover.backend.repositories.ClientRepository;
 import mealmover.backend.security.SecurityService;
@@ -29,6 +33,9 @@ public class ClientService {
     private final SecurityService securityService;
     private final ClientRepository clientRepository;
     private final ClientDataService clientDataService;
+    private final CreditCardService creditCardService;
+
+    private final CreditCardMapper creditCardMapper;
 
 //    public ClientResponseDto create(ClientCreateRequestDto requestDto) {
 //        String email = requestDto.getEmail();
@@ -73,13 +80,6 @@ public class ClientService {
         log.info("Successfully created client with name: {}", model.getEmail());
 
         return savedClientModel;
-    }
-
-    public ClientModel getModelByEmail(String email) {
-        log.info("Getting client model by email: {}", email);
-        return this.clientRepository
-            .findByEmail(email)
-            .orElseThrow(() -> new NotFoundException(ClientConstants.NOT_FOUND_BY_EMAIL));
     }
 //
 //    public List<ClientResponseDto> getAll() {
@@ -146,7 +146,7 @@ public class ClientService {
 //    }
 //
 //
-    public AddressResponseDto addAddress( AddressCreateRequestDto requestDto) {
+    public AddressResponseDto addAddress(AddressCreateRequestDto requestDto) {
         log.info("Attempting to add address to client");
 
         ClientModel clientModel = (ClientModel)this.securityService.getModelCurrentUser();
@@ -161,12 +161,23 @@ public class ClientService {
 
         return this.addressMapper.toDto(createdModel);
     }
-//
-//    public CreditCardResponseDto addCreditCard(CreditCardCreateRequestDto creditCardDto) {
-//        ClientModel client = this.repository.findById(creditCardDto.getClientId())
-//            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
-//        return this.creditCardService.create(creditCardDto, client);
-//    }
+
+    public CreditCardResponseDto addCreditCard(CreditCardCreateRequestDto requestDto) {
+        log.info("Attempting to add credit card to client");
+
+        ClientModel clientModel = (ClientModel)this.securityService.getModelCurrentUser();
+
+        CreditCardModel creditCardModel = this.creditCardMapper.toModel(requestDto);
+
+        creditCardModel.setClient(clientModel);
+
+        CreditCardModel createdModel = this.creditCardService.create(creditCardModel);
+
+        log.info("Successfully added credit card to client");
+
+        return this.creditCardMapper.toDto(createdModel);
+
+    }
 //
 //    public void deleteCreditCard(UUID clientId, UUID creditCardId) {
 //        ClientModel client = this.repository.findById(clientId)

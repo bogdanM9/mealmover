@@ -4,12 +4,14 @@ package mealmover.backend.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name="credit_cards")
 public class CreditCardModel {
     @Id
@@ -32,9 +34,10 @@ public class CreditCardModel {
     private int securityCode;
 
     @Column(name="is_main", nullable=false)
-    private boolean isMain;
+    private boolean isMain = false;
 
     @ManyToOne
     @JoinColumn(name="client_id")
+    @ToString.Exclude
     private ClientModel client;
 }

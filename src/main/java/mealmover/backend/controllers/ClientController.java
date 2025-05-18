@@ -3,8 +3,10 @@ package mealmover.backend.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mealmover.backend.dtos.requests.AddressCreateRequestDto;
+import mealmover.backend.dtos.requests.CreditCardCreateRequestDto;
 import mealmover.backend.dtos.responses.AddressResponseDto;
 import mealmover.backend.dtos.responses.ClientResponseDto;
+import mealmover.backend.dtos.responses.CreditCardResponseDto;
 import mealmover.backend.services.ClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,9 +54,9 @@ public class ClientController {
 //        return ResponseEntity.ok(messages.deletedAll());
 //    }
 //
-//    @PostMapping("/add/credit-cards")
-//    public ResponseEntity<CreditCardResponseDto> create(@Valid @RequestBody CreditCardCreateRequestDto requestDto) {
-//        CreditCardResponseDto response = this.service.addCreditCard(requestDto);
-//        return ResponseEntity.ok(response);
-//    }
+    @PostMapping("/credit-cards")
+    public ResponseEntity<CreditCardResponseDto> create(@Valid @RequestBody CreditCardCreateRequestDto requestDto) {
+        CreditCardResponseDto response = this.service.addCreditCard(requestDto);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -10,4 +10,5 @@ public class AddressCreateRequestDto {
     private Integer number;
     private String postcode;
     private String details;
+    private boolean main;
 }

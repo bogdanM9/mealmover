@@ -35,6 +35,9 @@ public class AddressModel {
     @Column(nullable = false)
     private String postcode;
 
+    @Column(name = "is_main", nullable = false)
+    private boolean isMain = false;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private ClientModel client;
