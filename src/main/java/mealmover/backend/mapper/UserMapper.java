@@ -1,5 +1,6 @@
 package mealmover.backend.mapper;
 
+import mealmover.backend.dtos.requests.UserCreateRequestDto;
 import mealmover.backend.dtos.responses.UserResponseDto;
 import mealmover.backend.models.UserModel;
 import org.mapstruct.Mapper;
@@ -9,4 +10,6 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     @Mapping(source="model.roles", target="role", qualifiedByName = "toFirstDto")
     UserResponseDto toDto(UserModel model);
+
+
 }

@@ -25,7 +25,8 @@ public class WebSecurityConfig {
         "/api/auth/login",
         "/api/auth/register-client",
         "/api/auth/activate-client",
-        "/api/products"
+        "/api/products",
+            "/api/roles"
     };
 
     private final JwtUtils jwtUtils;
@@ -62,7 +63,12 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
             .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth.requestMatchers(WHITE_LIST_URL).permitAll().anyRequest().authenticated());
+            .authorizeHttpRequests(
+                auth -> auth.requestMatchers(WHITE_LIST_URL)
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            );
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -9,7 +9,9 @@ public class AddressResponseDto {
     private String id;
     private String county;
     private String street;
+    private int number;
+    private String city;
     private String details;
     private String postcode;
-    private int number;
+    private boolean main = false;
 }

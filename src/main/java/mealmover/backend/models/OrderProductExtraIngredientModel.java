@@ -25,4 +25,11 @@ public class OrderProductExtraIngredientModel {
     @ManyToOne
     @JoinColumn(name = "extra_ingredient_id", nullable = false)
     private ExtraIngredientModel extraIngredient;
+
+    public OrderProductExtraIngredientModel(int quantity, ExtraIngredientModel modelById) {
+        this.quantity = quantity;
+        this.extraIngredient = modelById;
+    }
+    public OrderProductExtraIngredientModel() {
+    }
 }

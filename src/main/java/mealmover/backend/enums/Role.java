@@ -3,7 +3,7 @@ package mealmover.backend.enums;
 import mealmover.backend.utils.StringUtils;
 
 public enum Role {
-    CLIENT;
+    CLIENT, ADMIN;
 
     public String toCapitalize() {
         return StringUtils.toCapitalize(this.name());

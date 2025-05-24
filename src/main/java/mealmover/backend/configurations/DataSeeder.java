@@ -35,4 +35,9 @@ public class DataSeeder implements CommandLineRunner {
 
         log.info("Roles seeding completed.");
     }
+
+    private void seedProducts(){
+        log.info("Seeding products...");
+
+    }
 }

@@ -19,8 +19,6 @@ public class ProductModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private float rating;
-
     @Column(nullable = false, length = 200)
     private String name;
 
@@ -36,7 +34,7 @@ public class ProductModel {
 
     @OneToMany(
         mappedBy = "product",
-        fetch = FetchType.LAZY,
+        fetch = FetchType.LAZY, cascade = CascadeType.ALL,
         orphanRemoval = true
     )
     private Set<ProductSizeModel> productSizes = new HashSet<>();

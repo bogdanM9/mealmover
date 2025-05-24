@@ -34,6 +34,7 @@ public class SecurityService {
 
         return switch (role) {
             case CLIENT -> this.clientDataService.getById(id);
+            case ADMIN -> this.clientDataService.getById(id);
         };
     }
 
@@ -45,6 +46,7 @@ public class SecurityService {
 
         return switch (role) {
             case CLIENT -> this.clientMapper.toDto((ClientModel) userModel);
+            case ADMIN -> this.clientMapper.toDto((ClientModel) userModel);
         };
     }
 }

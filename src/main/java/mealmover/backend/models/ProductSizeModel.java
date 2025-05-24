@@ -25,4 +25,12 @@ public class ProductSizeModel {
     @JoinColumn(name="product_id", nullable=false)
     @ToString.Exclude
     private ProductModel product;
+
+   public ProductSizeModel() {
+    }
+
+    public ProductSizeModel(SizeModel size, ProductModel product) {
+        this.size = size;
+        this.product = product;
+    }
 }

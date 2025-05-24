@@ -3,6 +3,7 @@ package mealmover.backend.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mealmover.backend.constants.UserConstants;
+import mealmover.backend.dtos.requests.UserCreateRequestDto;
 import mealmover.backend.dtos.responses.UserResponseDto;
 import mealmover.backend.enums.Role;
 import mealmover.backend.exceptions.NotFoundException;
@@ -30,6 +31,8 @@ public class UserService {
     private final SecurityUtils securityUtils;
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
 
 //    @Transactional(readOnly = true)
 //    public UserResponseDto getCurrentUser() {
@@ -51,23 +54,19 @@ public class UserService {
 
 
 //    public UserResponseDto create(UserCreateRequestDto requestDto) {
-//        String name = requestDto.getFirstName();
-//
-//        log.info("Attempting to create a User with name: {}", name);
-//
-//        if (this.repository.findByFirstName(name).isPresent()) {
-//            throw new ConflictException(this.roleMessages.create());
+//        log.info("Creating user with email {}", requestDto.getEmail());
+//        if (this.userRepository.existsByEmail(requestDto.getEmail())) {
+//            log.error("User with email {} already exists", requestDto.getEmail());
+//            throw new UnauthorizedException("User with this email already exists");
 //        }
 //
-//        UserModel userModel = this.mapper.toModel(requestDto);
+//        UserModel userModel = this.userMapper.toModel(requestDto);
+//        userModel.setRole(Role.USER);
 //        String hashedPassword = this.passwordEncoder.encode(userModel.getPassword());
 //        userModel.setPassword(hashedPassword);
+//        this.userRepository.save(userModel);
 //
-//        UserModel savedUserModel = this.repository.save(userModel);
-//
-//        log.info("Successfully created User with name: {}", name);
-//
-//        return this.mapper.toDto(savedUserModel);
+//        return this.userMapper.toDto(userModel);
 //    }
 
     @Transactional

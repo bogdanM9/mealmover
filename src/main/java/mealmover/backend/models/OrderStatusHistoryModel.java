@@ -26,6 +26,15 @@ public class OrderStatusHistoryModel {
     @Column(name = "changed_id", nullable = false)
     private java.time.LocalDateTime changedAt;
 
+    public OrderStatusHistoryModel(OrderModel orderModel, StatusModel statusModel) {
+        this.order = orderModel;
+        this.status = statusModel;
+    }
+
+    public OrderStatusHistoryModel() {
+    }
+
+
     @PrePersist
     protected void onCreate() {
         this.changedAt = java.time.LocalDateTime.now();

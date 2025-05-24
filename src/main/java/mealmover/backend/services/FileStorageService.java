@@ -32,9 +32,11 @@ public class FileStorageService {
     public String storeImage(MultipartFile file, boolean returnFullPath) {
         try {
             String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+
             String fileName = UUID.randomUUID() + "_" + originalFileName;
 
             Path targetLocation = this.imageStoreLocation.resolve(fileName);
+
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return returnFullPath ? targetLocation.toString() : fileName;

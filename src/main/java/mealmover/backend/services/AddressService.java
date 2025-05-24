@@ -19,7 +19,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AddressService {
-    private final AddressMapper addressMapper;
+    private final AddressMapper mapper;
     private final AddressRepository addressRepository;
     
     @Transactional
@@ -72,20 +72,52 @@ public class AddressService {
 //            .toList();
 //    }
 //
-//    @Transactional(readOnly = true)
-//    public AddressResponseDto getById(UUID id) {
-//        log.info("Getting address by id: {}", id);
-//        return this.repository
-//            .findById(id)
-//            .map(this.mapper::toDto)
-//            .orElseThrow(() -> new NotFoundException(this.messages.notFoundById()));
-//    }
+    @Transactional(readOnly = true)
+    public AddressModel getModelById(UUID id) {
+        log.info("Getting Address by id: {}", id);
+        return this.addressRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Address not found"));
+    }
 //
-//    @Transactional
-//    public void deleteById(UUID id) {
-//        log.info("Getting Address by id: {}", id);
-//        this.repository.deleteById(id);
-//    }
+    @Transactional
+    public void deleteById(UUID id) {
+        log.info("Getting address by id: {}", id);
+
+        if(!this.addressRepository.existsById(id)) {
+            throw new NotFoundException("Address not found");
+        }
+
+        this.addressRepository.deleteById(id);
+    }
+
+    public AddressModel update(AddressModel addressModel) {
+        log.info("Attempting to update an Address");
+
+        if(!this.addressRepository.existsById(addressModel.getId())) {
+            throw new NotFoundException("Address not found");
+        }
+
+        AddressModel updatedModel = this.addressRepository.save(addressModel);
+
+        log.info("Successfully updated address");
+
+        return updatedModel;
+    }
+
+    public AddressModel save(ClientModel clientModel, AddressCreateRequestDto address) {
+        log.info("Attempting to create an Address");
+
+        AddressModel addressModel = this.mapper.toModel(address);
+        addressModel.setClient(clientModel);
+
+        AddressModel createdAddress = this.addressRepository.save(addressModel);
+
+        log.info("Successfully created address");
+
+        return createdAddress;
+    }
+
+
 //
 //    @Transactional
 //    public void deleteAll() {
@@ -94,11 +126,7 @@ public class AddressService {
 //        log.info("Addresses deleted!");
 //    }
 //
-//    @Transactional(readOnly = true)
-//    public AddressModel getModelById(UUID addressId) {
-//        return this.repository.findById(addressId)
-//            .orElseThrow(() -> new NotFoundException(this.messages.notFoundById()));
-//    }
+
 //
 //    public void delete(ClientModel client, UUID addressId) {
 //        log.info("Attempting to delete an Address");

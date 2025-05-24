@@ -29,16 +29,16 @@ public class ProductController {
         @RequestParam("data") String data
     ) {
         System.out.println(data);
-        ProductCreateRequestDto requestDto = this.mapperService.parseProductData(data);
+        ProductCreateRequestDto requestDto = this.mapperService.parseProductCreateData(data);
         ProductResponseDto responseDto = this.productService.create(image, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/add-review")
-    public ResponseEntity<ReviewResponseDto> addReview(@Valid @RequestBody ReviewCreateRequestDto requestDto) {
-        ReviewResponseDto response = this.productService.addReview(requestDto);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping("/add-review")
+//    public ResponseEntity<ReviewResponseDto> addReview(@Valid @RequestBody ReviewCreateRequestDto requestDto) {
+//        ReviewResponseDto response = this.productService.addReview(requestDto);
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping
     public ResponseEntity<Set<ProductResponseDto>> getAll() {

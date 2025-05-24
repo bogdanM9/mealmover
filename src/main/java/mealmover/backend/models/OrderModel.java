@@ -19,7 +19,6 @@ public class OrderModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-
     @Column(length = 1000)
     private String details;
 

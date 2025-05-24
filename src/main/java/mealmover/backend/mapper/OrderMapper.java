@@ -1,4 +1,3 @@
-/*
 package mealmover.backend.mapper;
 
 import mealmover.backend.dtos.requests.OrderCreateRequestDto;
@@ -15,4 +14,3 @@ public interface OrderMapper {
 
     OrderResponseDto toDto(OrderModel model);
 }
-*/

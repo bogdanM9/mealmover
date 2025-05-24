@@ -24,23 +24,6 @@ public class CreditCardService {
     private final CreditCardRepository creditCardRepository;
     private final PasswordEncoder passwordEncoder;
 
-//    public CreditCardResponseDto create(CreditCardCreateRequestDto dto, ClientModel client) {
-//        logger.info("Attempting to create a CreditCard");
-//
-//        CreditCardModel creditCard = this.creditCardMapper.toModel(dto);
-//        creditCard.setClient(client);
-//
-//        String hashedCardNumber = passwordEncoder.encode(dto.getCardNumber());
-//        creditCard.setCardNumber(hashedCardNumber);
-//
-//        CreditCardModel savedCreditCard = this.creditCardRepository.save(creditCard);
-//
-//        logger.info("Successfully created creditCard");
-//
-//        return this.creditCardMapper.toDto(savedCreditCard);
-//    }
-
-
     public List<CreditCardResponseDto> getAllCreditCards() {
         log.info("Getting all CreditCards");
           return this.creditCardRepository
@@ -79,5 +62,33 @@ public class CreditCardService {
         log.info("Successfully created credit card");
 
         return savedCreditCard;
+    }
+
+    public CreditCardModel getModelById(UUID creditCardId) {
+        log.info("Getting CreditCard by id: {}", creditCardId);
+        return this.creditCardRepository.findById(creditCardId)
+            .orElseThrow(() -> new RuntimeException("CreditCard not found"));
+    }
+
+    public void deleteById(UUID creditCardId) {
+        log.info("Getting CreditCard by id: {}", creditCardId);
+        this.creditCardRepository.deleteById(creditCardId);
+    }
+
+    public CreditCardModel update(CreditCardModel creditCardModel) {
+        log.info("Attempting to update a CreditCard");
+
+        if (!this.creditCardRepository.existsById(creditCardModel.getId())) {
+            throw new RuntimeException("CreditCard not found");
+        }
+
+        String hashedCardNumber = this.passwordEncoder.encode(creditCardModel.getCardNumber());
+        creditCardModel.setCardNumber(hashedCardNumber);
+
+        CreditCardModel updatedModel = this.creditCardRepository.save(creditCardModel);
+
+        log.info("Successfully updated CreditCard");
+
+        return updatedModel;
     }
 }
