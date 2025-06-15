@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class CreateCategoryRequestDto {
     private String name;
+    private String imageUri;
 }

@@ -29,8 +29,8 @@ public class ProductSizeModel {
    public ProductSizeModel() {
     }
 
-    public ProductSizeModel(SizeModel size, ProductModel product) {
-        this.size = size;
-        this.product = product;
+    public ProductSizeModel(SizeModel sizeModel, ProductModel productModel) {
+        this.size = sizeModel;
+        this.product = productModel;
     }
 }

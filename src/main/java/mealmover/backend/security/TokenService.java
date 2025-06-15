@@ -74,4 +74,5 @@ public class TokenService {
     public Token getTokenType(String token) {
         return this.jwtUtils.getTokenType(token);
     }
+
 }

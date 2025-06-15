@@ -40,11 +40,20 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 String username = this.jwtUtils.getUsernameFromToken(jwt);
 
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+                if(userDetails == null) {
+                    log.warn("User details not found for username {} logging out...", username);
+                    CookieUtils.clearAccessTokenCookie(response);
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
                     userDetails.getAuthorities()
                 );
+
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

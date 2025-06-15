@@ -29,4 +29,13 @@ public class SizeModel {
 
     @OneToMany(mappedBy="size", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<ProductSizeModel> productSizes = new HashSet<>();
+
+    public SizeModel(String name, int weight, float price) {
+        this.name = name;
+        this.weight = weight;
+        this.price = price;
+    }
+    public SizeModel() {
+        // Default constructor for JPA
+    }
 }

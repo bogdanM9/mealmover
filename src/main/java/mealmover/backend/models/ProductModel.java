@@ -54,4 +54,23 @@ public class ProductModel {
         inverseJoinColumns = @JoinColumn(name = "extra_ingredient_id")
     )
     private Set<ExtraIngredientModel> extraIngredients = new HashSet<>();
+
+    public ProductModel() {
+        // Default constructor for JPA
+    }
+
+    public ProductModel(
+        String name, String imageUri, CategoryModel category,
+        Set<ProductSizeModel> productSizes,
+        Set<IngredientModel> ingredients,
+        Set<ExtraIngredientModel> extraIngredients
+    ) {
+         this.name = name;
+         this.imageUri = imageUri;
+         this.category = category;
+         this.productSizes = productSizes != null ? productSizes : new HashSet<>();
+         this.ingredients = ingredients != null ? ingredients : new HashSet<>();
+         this.extraIngredients = extraIngredients != null ? extraIngredients : new HashSet<>();
+    }
+
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mealmover.backend.constants.RoleConstants;
 import mealmover.backend.dtos.requests.RoleCreateRequestDto;
+import mealmover.backend.dtos.requests.RoleUpdateRequestDto;
 import mealmover.backend.dtos.responses.RoleResponseDto;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
@@ -12,6 +13,10 @@ import mealmover.backend.models.RoleModel;
 import mealmover.backend.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -52,69 +57,59 @@ public class RoleService {
             .orElseThrow(() -> new NotFoundException(RoleConstants.NOT_FOUND_BY_NAME));
     }
 
-//    public RoleModel getOrCreate(String name) {
-//        log.info("Attempting to get or create role model with name: {}", name);
-//        return this.repository
-//            .findByName(name)
-//            .orElseGet(() -> this.roleRepository.save(new RoleModel(name)));
-//    }
+    public RoleModel getOrCreate(String name) {
+        log.info("Attempting to get or create role model with name: {}", name);
+        return this.roleRepository
+            .findByName(name)
+            .orElseGet(() -> this.roleRepository.save(new RoleModel(name)));
+    }
 
-//    public List<RoleResponseDto> getAll() {
-//        log.info("Getting all roles");
-//        return this.repository
-//            .findAll()
-//            .stream()
-//            .map(this.mapper::toDto)
-//            .toList();
-//    }
-//
-//    public RoleResponseDto getById(UUID id) {
-//        log.info("Getting role by id: {}", id);
-//        return this.repository
-//                .findById(id)
-//                .map(this.mapper::toDto)
-//                .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
-//    }
-//
-//    public void TestMethodById(UUID id){
-//        System.out.println("WHAT");
-//        RoleModel roleModel=this.roleRepository.findById(id).orElseThrow(() -> new NotFoundException(messages.notFoundById()));
-//        System.out.println("TESTING");
-//        System.out.println(roleModel.getUsers()); // This is the line that causes the error -->
-//        // org.hibernate.LazyInitializationException: could not initialize proxy [mealmover.backend.models.UserModel#f3b3b3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b] - no Session
-//    }
-//    public Optional<RoleModel> getModelByName(String name){
-//        return this.roleRepository.findByName(name);
-//    }
-//
-//    public RoleResponseDto updateById(UUID id, RoleUpdateRequestDto requestDto) {
-//        log.info("Attempting to update role with id: {}", id);
-//
-//        RoleModel role = this.repository
-//            .findById(id)
-//            .orElseThrow(() -> new NotFoundException(messages.notFoundById()));
-//
-//        role.setName(requestDto.getName());
-//
-//        RoleModel updatedRole = this.roleRepository.save(role);
-//
-//        log.info("Successfully update role with id: {}", id);
-//
-//        return this.roleMapper.toDto(updatedRole);
-//    }
-//
-//    public void deleteById(UUID id) {
-//        log.info("Getting role by id: {}", id);
-//        if (this.roleRepository.findById(id).isEmpty()) {
-//            throw new NotFoundException(messages.notFoundById());
-//        }
-//        this.roleRepository.deleteById(id);
-//        log.info("Role with id {} deleted!", id);
-//    }
-//
-//    public void deleteAll() {
-//        log.info("Deleting all roles..");
-//        this.roleRepository.deleteAll();
-//        log.info("Roles deleted!");
-//    }
+    public List<RoleResponseDto> getAll() {
+        log.info("Getting all roles");
+        return this.roleRepository
+            .findAll()
+            .stream()
+            .map(this.roleMapper::toDto)
+            .toList();
+    }
+
+    public RoleResponseDto getById(UUID id) {
+        log.info("Getting role by id: {}", id);
+        return this.roleRepository
+                .findById(id)
+                .map(this.roleMapper::toDto)
+                .orElseThrow(() -> new NotFoundException(RoleConstants.NOT_FOUND_BY_ID));
+    }
+
+
+    public RoleResponseDto updateById(UUID id, RoleUpdateRequestDto requestDto) {
+        log.info("Attempting to update role with id: {}", id);
+
+        RoleModel role = this.roleRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException(RoleConstants.NOT_FOUND_BY_ID));
+
+        role.setName(requestDto.getName());
+
+        RoleModel updatedRole = this.roleRepository.save(role);
+
+        log.info("Successfully update role with id: {}", id);
+
+        return this.roleMapper.toDto(updatedRole);
+    }
+
+    public void deleteById(UUID id) {
+        log.info("Getting role by id: {}", id);
+        if (this.roleRepository.findById(id).isEmpty()) {
+            throw new NotFoundException(RoleConstants.NOT_FOUND_BY_ID);
+        }
+        this.roleRepository.deleteById(id);
+        log.info("Role with id {} deleted!", id);
+    }
+
+    public void deleteAll() {
+        log.info("Deleting all roles..");
+        this.roleRepository.deleteAll();
+        log.info("Roles deleted!");
+    }
 }

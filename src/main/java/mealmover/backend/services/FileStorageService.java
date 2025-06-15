@@ -17,8 +17,7 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
     private final Path imageStoreLocation;
-
-    public FileStorageService(@Value("${file.upload-dir}") String fileStoragePath) {
+    public  FileStorageService(@Value("${file.upload-dir}") String fileStoragePath) {
         try {
             Path fileStorageLocation = Paths.get(fileStoragePath).toAbsolutePath().normalize();
             this.imageStoreLocation = fileStorageLocation.resolve("images");
@@ -29,17 +28,26 @@ public class FileStorageService {
         }
     }
 
-    public String storeImage(MultipartFile file, boolean returnFullPath) {
+    public String storeImage(MultipartFile file, String subDirectory, boolean returnFullPath) {
         try {
             String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
             String fileName = UUID.randomUUID() + "_" + originalFileName;
 
-            Path targetLocation = this.imageStoreLocation.resolve(fileName);
+            Path dir = this.imageStoreLocation.resolve(subDirectory).normalize();
+
+            Files.createDirectories(dir);
+
+            Path targetLocation = dir.resolve(fileName);
 
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return returnFullPath ? targetLocation.toString() : fileName;
+            if(returnFullPath) {
+                return targetLocation.toString();
+            }
+
+            return subDirectory.isEmpty() ? fileName : subDirectory + "/" + fileName;
+
         } catch (IOException e) {
             throw new FileStorageException(
                 "Could not store image " + file.getOriginalFilename() + ", please try again!"

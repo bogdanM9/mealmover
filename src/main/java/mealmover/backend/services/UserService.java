@@ -96,27 +96,25 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-//    public UserResponseDto getById(UUID id) {
-//        log.info("Getting User by id: {}", id);
-//        return this.repository
-//            .findById(id)
-//            .map(this.mapper::toDto)
-//            .orElseThrow(() -> new NotFoundException(
-//                    messages.notFoundById()
-//            ));
-//    }
-//
-//    public void deleteById(UUID id) {
-//        log.info("Getting user by id: {}", id);
-//
-//        if (this.repository.findById(id).isEmpty()) {
-//            throw new NotFoundException(messages.notFoundById());
-//        }
-//
-//        this.repository.deleteById(id);
-//
-//        log.info("User with id {} deleted!", id);
-//    }
+    public UserResponseDto getById(UUID id) {
+        log.info("Getting User by id: {}", id);
+        return this.userRepository
+            .findById(id)
+            .map(this.userMapper::toDto)
+            .orElseThrow(() -> new NotFoundException(UserConstants.NOT_FOUND_BY_ID));
+    }
+
+    public void deleteById(UUID id) {
+        log.info("Getting user by id: {}", id);
+
+        if (this.userRepository.findById(id).isEmpty()) {
+            throw new NotFoundException(UserConstants.NOT_FOUND_BY_ID);
+        }
+
+        this.userRepository.deleteById(id);
+
+        log.info("User with id {} deleted!", id);
+    }
 
     public void deleteAll() {
         log.info("Deleting all users..");
@@ -124,4 +122,9 @@ public class UserService {
         log.info("Users deleted!");
     }
 
+    public void save(UserModel userModel) {
+        log.info("Saving user with email: {}", userModel.getEmail());
+        this.userRepository.save(userModel);
+        log.info("User with email {} saved successfully", userModel.getEmail());
+    }
 }

@@ -20,6 +20,10 @@ public class CategoryModel {
     @Column(name="name", nullable=false, length=200)
     private String name;
 
+    @Column(name="image_uri", nullable=false)
+    private String imageUri;
+
     @OneToMany(mappedBy="category", fetch= FetchType.LAZY)
     private Set<ProductModel> products = new HashSet<>();
+
 }

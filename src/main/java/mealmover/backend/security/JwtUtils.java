@@ -151,4 +151,20 @@ public class JwtUtils {
             throw new JwtException("Invalid token type: expected " + expectedType + " but found " + actualType);
         }
     }
+
+    public String extractEmail(String token) {
+        try {
+            Claims claims = getClaimsFromToken(token);
+            return claims.getSubject();
+        } catch (JwtException e) {
+            throw new JwtException("Invalid token: " + e.getMessage(), e);
+        }
+    }
+
+    public String generateChangeEmailToken( String newEmail) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", Token.CHANGE_EMAIL.name());
+        claims.put("newEmail", newEmail);
+        return generateToken(claims, newEmail, jwtRegistrationTokenExpiration);
+    }
 }

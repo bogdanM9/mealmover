@@ -25,8 +25,10 @@ public class WebSecurityConfig {
         "/api/auth/login",
         "/api/auth/register-client",
         "/api/auth/activate-client",
+        "/api/roles",
         "/api/products",
-            "/api/roles"
+        "/api/categories",
+        "/api/files/**",
     };
 
     private final JwtUtils jwtUtils;

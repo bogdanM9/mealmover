@@ -34,6 +34,19 @@ public class ProductController {
         return ResponseEntity.ok(responseDto);
     }
 
+//    @GetMapping("/top-selling")
+//    public ResponseEntity<List<ProductResponseDto>> getTopSellingProducts() {
+//        List<ProductResponseDto> responseDtos = this.productService.getTop4SellingProducts();
+//        return ResponseEntity.ok(responseDtos);
+//    }
+
+    @GetMapping("/top-selling/drinks/{categoryId}")
+    public ResponseEntity<List<ProductResponseDto>> getTopSellingDrinks(@PathVariable("categoryId") UUID categoryId) {
+        List<ProductResponseDto> responseDtos = this.productService.getTopSellingByCategory(categoryId);
+        return ResponseEntity.ok(responseDtos);
+    }
+
+
 //    @PostMapping("/add-review")
 //    public ResponseEntity<ReviewResponseDto> addReview(@Valid @RequestBody ReviewCreateRequestDto requestDto) {
 //        ReviewResponseDto response = this.productService.addReview(requestDto);

@@ -1,3 +1,9 @@
 package mealmover.backend.dtos.requests;
 
-public class RoleUpdateRequestDto {}
+import lombok.Data;
+
+
+@Data
+public class RoleUpdateRequestDto {
+    String name;
+}

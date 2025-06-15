@@ -9,12 +9,13 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ExtraIngredientMapper {
-
     ExtraIngredientResponseDto toDto (ExtraIngredientModel model);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "products", ignore = true)
     @Mapping(target = "ordersProductsExtraIngredients", ignore = true)
     ExtraIngredientModel toModel (ExtraIngredientCreateDto dto);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "products", ignore = true)
     @Mapping(target = "ordersProductsExtraIngredients", ignore = true)

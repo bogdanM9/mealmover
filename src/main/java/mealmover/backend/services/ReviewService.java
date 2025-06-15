@@ -25,7 +25,6 @@ public class ReviewService {
 
     private final ReviewMapper mapper;
 
-    private final ClientService clientService;
 
     public ReviewResponseDto create(ReviewCreateRequestDto requestDto, ClientModel client, ProductModel product) {
         UUID clientId = requestDto.getClientId();

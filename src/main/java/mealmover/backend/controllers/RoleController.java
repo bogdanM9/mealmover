@@ -23,43 +23,36 @@ public class RoleController {
         return ResponseEntity.ok(responseDto);
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<RoleResponseDto>> getAll (){
-//        return ResponseEntity.ok(this.service.getAll());
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<RoleResponseDto> getById(@PathVariable UUID id){
-//        return ResponseEntity.ok(this.service.getById(id));
-//    }
+    @GetMapping
+    public ResponseEntity<List<RoleResponseDto>> getAll (){
+        return ResponseEntity.ok(this.service.getAll());
+    }
 
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<RoleResponseDto> updateById(
-//        @PathVariable UUID id,
-//        @Valid @RequestBody RoleUpdateRequestDto requestDto
-//    ){
-//        //RoleResponseDto responseDto = this.service.updateById(id, requestDto);
-//
-//        return ResponseEntity.ok(this.service.updateById(id, requestDto));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<RoleResponseDto> getById(@PathVariable UUID id){
+        return ResponseEntity.ok(this.service.getById(id));
+    }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
-//        this.service.deleteById(id);
-//        return ResponseEntity.ok(roleMessages.deleted());
-//    }
-//
-//    @DeleteMapping
-//    public ResponseEntity<String> deleteAll(){
-//        this.service.deleteAll();
-//        return ResponseEntity.ok(roleMessages.deletedAll());
-//    }
-//
-//    @GetMapping("/test/{id}")
-//    public ResponseEntity<String> TestMethodByID(@PathVariable UUID id){
-//        this.service.TestMethodById(id);
-//        return ResponseEntity.ok("This is a test method by ID");
-//    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<RoleResponseDto> updateById(
+        @PathVariable UUID id,
+        @Valid @RequestBody RoleUpdateRequestDto requestDto
+    ){
+        //RoleResponseDto responseDto = this.service.updateById(id, requestDto);
 
+        return ResponseEntity.ok(this.service.updateById(id, requestDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
+        this.service.deleteById(id);
+        return ResponseEntity.ok("Role deleted successfully.");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteAll(){
+        this.service.deleteAll();
+        return ResponseEntity.ok("All roles deleted successfully.");
+    }
 
 }

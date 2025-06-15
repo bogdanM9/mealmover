@@ -3,12 +3,16 @@ package mealmover.backend.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mealmover.backend.dtos.requests.ProductCreateRequestDto;
+import mealmover.backend.dtos.requests.ReviewCreateRequestDto;
 import mealmover.backend.dtos.responses.ProductResponseDto;
+import mealmover.backend.dtos.responses.ReviewResponseDto;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.ProductMapper;
 import mealmover.backend.models.*;
+import mealmover.backend.records.ProductData;
 import mealmover.backend.repositories.ProductRepository;
+import mealmover.backend.security.SecurityService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,12 +33,14 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FileStorageService fileStorageService;
     private final ExtraIngredientService extraIngredientService;
+    private final ReviewService reviewService;
+    private final SecurityService securityService;
 
     @Transactional
     public ProductResponseDto create(MultipartFile image, ProductCreateRequestDto productCreateRequestDto) {
         String name = productCreateRequestDto.getName();
 
-        String imageUri = this.fileStorageService.storeImage(image, false);
+        String imageUri = this.fileStorageService.storeImage(image, "products", false);
 
         if (this.productRepository.existsByName(name)) {
             log.error("Product with name {} already exists", name);
@@ -82,20 +88,20 @@ public class ProductService {
     }
 
 
-//    public ReviewResponseDto addReview(ReviewCreateRequestDto reviewCreateRequestDto) {
-//        if (this.reviewService.existsByClientIdAndProductId(reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId())) {
-//            log.error("Client with id {} already reviewed product with id {}", reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId());
-//            throw new ConflictException("You already reviewed this product");
-//        }
-//
-//        ClientModel client = this.clientService.getModelById(reviewCreateRequestDto.getClientId());
-//
-//        ProductModel product = this.repository
-//            .findById(reviewCreateRequestDto.getProductId())
-//            .orElseThrow(() -> new NotFoundException(this.messages.notfoundById()));
-//
-//        return this.reviewService.create(reviewCreateRequestDto, client, product);
-//    }
+    public ReviewResponseDto addReview(ReviewCreateRequestDto reviewCreateRequestDto) {
+        if (this.reviewService.existsByClientIdAndProductId(reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId())) {
+            log.error("Client with id {} already reviewed product with id {}", reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId());
+            throw new ConflictException("You already reviewed this product");
+        }
+
+        ClientModel clientModel = (ClientModel) this.securityService.getModelCurrentUser();
+
+        ProductModel product = this.productRepository
+            .findById(reviewCreateRequestDto.getProductId())
+            .orElseThrow(() -> new NotFoundException("There is no product with this id"));
+
+        return this.reviewService.create(reviewCreateRequestDto, clientModel, product);
+    }
 
 
     public ProductResponseDto getById(UUID id) {
@@ -149,5 +155,72 @@ public class ProductService {
 
     public SizeModel getSizeModelById(UUID productSizeId) {
         return this.sizeService.getModelById(productSizeId);
+    }
+
+
+    public List<ProductResponseDto> getTopFourBestSellingProducts() {
+        List<ProductModel> productModels = this.productRepository.findTopFourBestSellingProducts();
+        return productModels.stream()
+            .map(this.productMapper::toDto)
+            .collect(Collectors.toList());
+    }
+
+    public List<ProductResponseDto> getTopSellingByCategory(UUID categoryId) {
+        if (!this.categoryService.existsById(categoryId)) {
+            log.error("Category with id {} does not exist", categoryId);
+            throw new NotFoundException("There is no category with this id");
+        }
+
+        List<ProductModel> topSellingDrinks = this.productRepository.findTopFourBestSellingProductsByCategoryId(categoryId);
+
+        if (topSellingDrinks.isEmpty()) {
+            log.warn("No top selling drinks found for category with id {}", categoryId);
+            return List.of();
+        }
+
+        return topSellingDrinks.stream()
+                .map(this.productMapper::toDto).toList();
+    }
+    @Transactional
+    public void seed(ProductData productData){
+        String name = productData.name();
+
+        CategoryModel categoryModel = this.categoryService.getModelByName(productData.category());
+
+        ProductModel productModel = this.productMapper.toModel(productData);
+
+        productModel.setImageUri(productData.imageUri());
+        productModel.setCategory(categoryModel);
+
+        productModel.setIngredients(
+                productModel.getIngredients()
+                        .stream()
+                        .map(ingredientService::getOrCreate)
+                        .collect(Collectors.toSet()
+                        )
+        );
+
+        productModel.setExtraIngredients(
+                productModel.getExtraIngredients()
+                        .stream()
+                        .map(extraIngredientService::getOrCreate)
+                        .collect(Collectors.toSet()
+                        )
+        );
+
+        productModel.setProductSizes(
+                productData.sizes()
+                        .stream()
+                        .map(sizeData -> {
+                            SizeModel sizeModel = this.sizeService.getOrCreate(sizeData);
+                            return new ProductSizeModel(sizeModel, productModel);
+                        })
+                        .collect(Collectors.toSet()
+                        )
+        );
+
+        ProductModel savedProduct = this.productRepository.save(productModel);
+        log.info("Seeded product with name: {}", savedProduct.getName());
+
     }
 }

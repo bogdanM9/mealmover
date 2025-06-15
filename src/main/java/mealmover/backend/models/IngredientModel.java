@@ -33,4 +33,13 @@ public class IngredientModel {
         inverseJoinColumns = @JoinColumn(name = "allergen_id")
     )
     private Set<AllergenModel> allergens = new HashSet<>();
+
+    public IngredientModel(String name, Set<AllergenModel> allergens) {
+        this.name = name;
+        this.allergens = allergens;
+    }
+
+    public IngredientModel() {
+        // Default constructor for JPA
+    }
 }

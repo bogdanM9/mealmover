@@ -8,6 +8,7 @@ import mealmover.backend.dtos.responses.SizeResponseDto;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.SizeMapper;
 import mealmover.backend.models.SizeModel;
+import mealmover.backend.records.SizeData;
 import mealmover.backend.repositories.SizeRepository;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,18 @@ public class SizeService {
         return this.repository
             .findByNameAndWeightAndPrice(name, weight, price)
             .orElseGet(() -> this.repository.save(sizeModel));
+    }
+
+    public SizeModel getOrCreate(SizeData sizeData) {
+        String name = sizeData.name();
+        int weight = sizeData.weight();
+        float price = sizeData.price();
+
+        log.info("Attempting to get or create size with name: {}", name);
+
+        return this.repository
+            .findByNameAndWeightAndPrice(name, weight, price)
+            .orElseGet(() -> this.repository.save(new SizeModel(name, weight, price)));
     }
 
     public void deleteOrphans() {

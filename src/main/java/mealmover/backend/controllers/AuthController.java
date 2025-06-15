@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mealmover.backend.constants.AuthConstants;
+import mealmover.backend.dtos.UserChangePassword;
 import mealmover.backend.dtos.requests.*;
 import mealmover.backend.dtos.responses.MessageResponseDto;
 import mealmover.backend.dtos.responses.UserResponseDto;
@@ -25,7 +26,6 @@ public class AuthController {
     private long jwtAccessTokenExpiration;
     private final AuthService authService;
     private final SecurityService securityService;
-//    private final UserService userService;
 
     @PostMapping("/register-client")
     public ResponseEntity<MessageResponseDto> registerClient(
@@ -85,22 +85,22 @@ public class AuthController {
         this.authService.resetPassword(requestDto);
         return ResponseEntity.ok(MessageResponseDto.success("Your password have been changed successfully."));
     }
-//
-//    @PostMapping("/change-email")
-//    public ResponseEntity<String> changeEmail(@Valid @RequestBody UserChangeEmail requestDto) {
-//        authService.changeEmail(requestDto);
-//        return ResponseEntity.ok("CHANGE-EMAIL");
-//    }
-//
-//    @PostMapping("/confirm-change-email")
-//    public ResponseEntity<String> confirmChangeEmail(@RequestBody AuthActivateClientRequestDto token) {
-//        authService.confirmChangeEmail(token);
-//        return ResponseEntity.ok("CONFIRM-CHANGE-EMAIL");
-//    }
-//
-//    @PostMapping("/change-password")
-//    public ResponseEntity<String> changePassword(@RequestBody UserChangePassword requestDto) {
-//        authService.changePassword(requestDto);
-//        return ResponseEntity.ok("CHANGE-PASSWORD");
-//    }
+
+    @PostMapping("/change-email")
+    public ResponseEntity<String> changeEmail(@Valid @RequestBody UserChangeEmail requestDto) {
+        authService.changeEmail(requestDto);
+        return ResponseEntity.ok("CHANGE-EMAIL");
+    }
+
+    @PostMapping("/confirm-change-email")
+    public ResponseEntity<String> confirmChangeEmail(@RequestBody AuthActivateClientRequestDto token) {
+        authService.confirmChangeEmail(token);
+        return ResponseEntity.ok("CONFIRM-CHANGE-EMAIL");
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody UserChangePassword requestDto) {
+        authService.changePassword(requestDto);
+        return ResponseEntity.ok("CHANGE-PASSWORD");
+    }
 }

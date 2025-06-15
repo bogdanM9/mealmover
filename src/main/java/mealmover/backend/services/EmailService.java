@@ -53,7 +53,7 @@ public class EmailService {
         this.sendEmail(email, subject, content);
     }
 
-    public void sendChangeEmailEmail(String email, String newEmail, String token) {
+    public void sendChangeEmail(String email, String newEmail, String token) {
         logger.info("Sending change email email to {}", email);
         String subject = "[%s] Email change".formatted(this.appName);
         String content = """

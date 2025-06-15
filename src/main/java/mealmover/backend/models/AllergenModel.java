@@ -25,4 +25,11 @@ public class AllergenModel {
     @ManyToMany(mappedBy = "allergens")
     @ToString.Exclude
     private Set<IngredientModel> ingredients = new HashSet<>();
+
+    public AllergenModel(String name) {
+        this.name = name;
+    }
+    public AllergenModel() {
+
+    }
 }

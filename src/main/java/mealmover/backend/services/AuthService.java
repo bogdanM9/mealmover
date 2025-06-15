@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import mealmover.backend.constants.PendingClientConstants;
 import mealmover.backend.constants.UserConstants;
+import mealmover.backend.dtos.UserChangePassword;
 import mealmover.backend.dtos.requests.*;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.mapper.ClientMapper;
@@ -12,6 +13,8 @@ import mealmover.backend.mapper.PendingClientMapper;
 import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.PendingClientModel;
 import mealmover.backend.models.UserModel;
+import mealmover.backend.security.JwtUtils;
+import mealmover.backend.security.SecurityService;
 import mealmover.backend.security.TokenService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +30,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserService userService;
-//    private final RoleService roleService;
     private final EmailService emailService;
     private final TokenService tokenService;
     private final ClientMapper clientMapper;
@@ -35,9 +37,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final PendingClientMapper pendingClientMapper;
     private final PendingClientService pendingClientService;
-//    private final PendingClientMessages pendingClientMessages;
     private final AuthenticationManager authenticationManager;
+    private final SecurityService securityService;
 
+    private final JwtUtils jwtUtils;
     public void registerClient(AuthRegisterClientRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
@@ -64,7 +67,7 @@ public class AuthService {
 
         this.pendingClientService.create(pendingClientModel);
 
-//        this.emailService.sendActivateClientAccountEmail(email, token);
+        this.emailService.sendActivateClientAccountEmail(email, token);
     }
 
     public void activateClient(AuthActivateClientRequestDto requestDto) {
@@ -126,59 +129,57 @@ public class AuthService {
 
         this.userService.create(userModel);
     }
-//
-//    public void changePassword(UserChangePassword requestDto) {
-//        if (requestDto.getOldPassword().equals(requestDto.getNewPassword())) {
-//            throw new RuntimeException("New password must be different from the old password");
-//        }
-//
-//        if(!requestDto.getConfirmPassword().equals(requestDto.getNewPassword())) {
-//            throw new RuntimeException("Passwords does not match");
-//        }
-//
-//        String email = this.securityService.getLoggedInUserEmail();
-//
-//        UserModel userModel = userService.getModelByEmail(email);
-//
-//        if (!this.passwordEncoder.matches(requestDto.getOldPassword(), userModel.getPassword())) {
-//            throw new RuntimeException("Invalid password");
-//        }
-//
-//        String hashedPassword = this.passwordEncoder.encode(requestDto.getNewPassword());
-//
-//        userModel.setPassword(hashedPassword);
-//
-//        userService.save(userModel);
-//    }
-//
-//    public void changeEmail(UserChangeEmail requestDto) {
-//
-//        String email = this.securityService.getLoggedInUserEmail();
-//        UserModel userModel = userService.getModelByEmail(email);
-//        userModel.setEmail(requestDto.getNewEmail()); // necesar pt token?
-//
-//        if (!this.passwordEncoder.matches(requestDto.getPassword(), userModel.getPassword())) {
-//            throw new RuntimeException("Invalid password");
-//        }
-//
-//        UserDetails userDetails = userMapper.toUserDetails(userModel);
-//
-//        String emailToken = jwtService.generateChangeEmailToken(userDetails);
-//
-//        this.emailService.sendChangeEmailEmail(requestDto.getNewEmail(), email, emailToken);
-//
-//    }
-//
-//    public void confirmChangeEmail(AuthActivateClientRequestDto requestDto) {
-//        String emailFromToken = jwtService.extractEmail(requestDto.getToken());
-//        System.out.println(emailFromToken);
-//        String loggedInUserEmail = this.securityService.getLoggedInUserEmail();
-//        UserModel userModel = userService.getModelByEmail(loggedInUserEmail); // SAU din reuqestDto?
-//        System.out.println(userModel.getFirstName());
-//        userModel.setEmail(emailFromToken);
-//        userService.save(userModel);
-//    }
-//
-//
-//
+
+
+    public void changeEmail(UserChangeEmail requestDto) {
+        String newEmail = requestDto.getNewEmail();
+
+        String password = requestDto.getPassword();
+
+        UserModel userModel = this.securityService.getModelCurrentUser();
+
+        if (!this.passwordEncoder.matches(password, userModel.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+        String emailToken = this.jwtUtils.generateChangeEmailToken(newEmail);
+        System.out.println(emailToken);
+        this.emailService.sendChangeEmail(userModel.getEmail(), newEmail,emailToken);
+
+    }
+
+        public void confirmChangeEmail(AuthActivateClientRequestDto requestDto) {
+        String emailFromToken = jwtUtils.extractEmail(requestDto.getToken());
+        System.out.println("Email from token ESTE: " + emailFromToken);
+        //Aici posibil sa fie o problema cu userModel, daca nu e logat
+        UserModel userModel = this.securityService.getModelCurrentUser();
+        userModel.setEmail(emailFromToken);
+        userService.save(userModel);
+    }
+
+
+
+
+    public void changePassword(UserChangePassword requestDto) {
+        if (requestDto.getOldPassword().equals(requestDto.getNewPassword())) {
+            throw new RuntimeException("New password must be different from the old password");
+        }
+
+        if(!requestDto.getConfirmPassword().equals(requestDto.getNewPassword())) {
+            throw new RuntimeException("Passwords does not match");
+        }
+
+        UserModel userModel = this.securityService.getModelCurrentUser();
+
+        if (!this.passwordEncoder.matches(requestDto.getOldPassword(), userModel.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        String hashedPassword = this.passwordEncoder.encode(requestDto.getNewPassword());
+
+        userModel.setPassword(hashedPassword);
+
+        userService.save(userModel);
+    }
+
+
 }

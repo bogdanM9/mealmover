@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -29,16 +30,16 @@ public class UserController {
         return ResponseEntity.ok(this.service.getAll());
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UserResponseDto> getById(@PathVariable UUID id) {
-//        return ResponseEntity.ok(this.service.getById(id));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getById(@PathVariable UUID id) {
+        return ResponseEntity.ok(this.service.getById(id));
+    }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
-//        this.service.deleteById(id);
-//        return ResponseEntity.ok(GeneralConstants.USER_DELETED_MESSAGE);
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
+        this.service.deleteById(id);
+        return ResponseEntity.ok("User with ID " + id + " has been deleted");
+    }
 
     @DeleteMapping
     public ResponseEntity<String> deleteAll() {

@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface AllergenRepository extends JpaRepository<AllergenModel, UUID> {
     boolean existsByName(String name);
     Optional<AllergenModel> findByName(String name);
+
 }
