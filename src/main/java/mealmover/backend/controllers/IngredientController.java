@@ -16,8 +16,8 @@ import java.util.UUID;
 @RequestMapping("/api/ingredients")
 @RequiredArgsConstructor
 public class IngredientController {
-
     private final IngredientService service;
+
     @PostMapping
     public ResponseEntity<IngredientResponseDto> create(@Valid @RequestBody IngredientCreateRequestDto requestDto) {
         IngredientResponseDto response = this.service.create(requestDto);
@@ -36,10 +36,9 @@ public class IngredientController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<IngredientResponseDto> updateById(
-            @PathVariable UUID id,
-            @Valid @RequestBody IngredientUpdateRequestDto requestDto
+        @PathVariable UUID id,
+        @Valid @RequestBody IngredientUpdateRequestDto requestDto
     ){
-
         return ResponseEntity.ok(this.service.updateById(id, requestDto));
     }
 

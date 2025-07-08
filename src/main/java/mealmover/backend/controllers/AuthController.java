@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class  AuthController {
     @Value("${application.security.jwt.tokens.access.expiration}")
     private long jwtAccessTokenExpiration;
     private final AuthService authService;

@@ -201,22 +201,21 @@ public class ProductService {
         );
 
         productModel.setExtraIngredients(
-                productModel.getExtraIngredients()
-                        .stream()
-                        .map(extraIngredientService::getOrCreate)
-                        .collect(Collectors.toSet()
-                        )
+            productModel.getExtraIngredients()
+            .stream()
+            .map(extraIngredientService::getOrCreate)
+            .collect(Collectors.toSet())
         );
 
         productModel.setProductSizes(
-                productData.sizes()
-                        .stream()
-                        .map(sizeData -> {
-                            SizeModel sizeModel = this.sizeService.getOrCreate(sizeData);
-                            return new ProductSizeModel(sizeModel, productModel);
-                        })
-                        .collect(Collectors.toSet()
-                        )
+            productData.sizes()
+                .stream()
+                .map(sizeData -> {
+                    SizeModel sizeModel = this.sizeService.getOrCreate(sizeData);
+                    return new ProductSizeModel(sizeModel, productModel);
+                })
+                .collect(Collectors.toSet()
+            )
         );
 
         ProductModel savedProduct = this.productRepository.save(productModel);

@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/male_mover
+    url: jdbc:postgresql://localhost:5432/meal_mover
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: test123
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   mail:
     host: smtp.gmail.com
     port: 587
@@ -45,4 +45,5 @@ application:
         reset-password:
           expiration: 3600000   # 1 hour (typically shorter for security)
 file:
-  upload-dir: D:\MealMover\backend\uploads
+  upload-dir: ./uploads
+

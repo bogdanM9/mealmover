@@ -15,7 +15,6 @@ import java.util.UUID;
 @RequestMapping("/api/allergens")
 @RequiredArgsConstructor
 public class AllergenController {
-
     private final AllergenService service;
 
     @PostMapping

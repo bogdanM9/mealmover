@@ -81,10 +81,10 @@ public class DataSeeder implements CommandLineRunner {
         log.info("Seeding categories...");
 
         List<CategoryData> categoriesData = List.of(
-            new CategoryData("Pizza", "american.png"),
-            new CategoryData("Mexican", "indian.png"),
+            new CategoryData("Pizza", "pizza.png"),
+            new CategoryData("Mexican", "mexican.png"),
             new CategoryData("Italian", "italian.png"),
-            new CategoryData("American", "mexican.png"),
+            new CategoryData("American", "american.png"),
             new CategoryData("Japanese", "japanese.png"),
             new CategoryData("Korean", "korean.png"),
             new CategoryData("Bakery", "bakery.png"),
@@ -101,174 +101,454 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedProducts(){
         log.info("Seeding products...");
+
         List<ProductData> productsData = List.of(
-                new ProductData(
-            "Pizza Margherita",
-          "pizza_margherita.jpg",
-          "Pizza",
-                    List.of(
-                            new SizeData("Mica", 100, 300),
-                            new SizeData("Medie", 120, 400),
-                            new SizeData("Mare", 150, 500)
-                    ),
-                    List.of(
-                        new IngredientData(
-                       "Mozzarella",
-                             List.of(new AllergenData("Lactoza"), new AllergenData("Histamina"))
-                         ),
-                        new IngredientData(
-                            "Rosii",
-                            List.of(new AllergenData("Sulfiti"), new AllergenData("Fosfati"))
-                        )
-                    ),
-                    List.of(
-                        new ExtraIngredientData("Sos rosii dulce", 4, 30),
-                        new ExtraIngredientData("Sos rosii iute", 5, 30)
-                    )
+            // Pizza
+            new ProductData(
+                "Margherita Pizza",
+                "pizza_margherita.jpg",
+                "Pizza",
+                List.of(
+                    new SizeData("Small", 5.0f, 300),
+                    new SizeData("Medium", 7.0f, 400),
+                    new SizeData("Large", 9.0f, 550)
                 ),
-                new ProductData(
-                        "Coca-Cola",
-                        "coca_cola.jpg",
-                        "Drinks",
-                        List.of(
-                                new SizeData("Mica", 100, 300),
-                                new SizeData("Medie", 120, 400),
-                                new SizeData("Mare", 150, 500)
-                        ),
-                        List.of(
-                                new IngredientData(
-                                        "Apa",
-                                        List.of(new AllergenData("Sulfiti"))
-                                ),
-                                new IngredientData(
-                                        "Zahar",
-                                        List.of(new AllergenData("Histamina"))
-                                )
-                        ),
-                        List.of(
-                                new ExtraIngredientData("Gheata", 2, 20)
-                        )
+                List.of(
+                    new IngredientData("Mozzarella", List.of(new AllergenData("Lactose"), new AllergenData("Histamine"))),
+                    new IngredientData("Tomato Sauce", List.of(new AllergenData("Sulphites"))),
+                    new IngredientData("Basil", List.of())
                 ),
-                new ProductData(
-                        "Taco Mexican",
-                        "taco_mexican.jpg",
-                        "Mexican",
-                        List.of(
-                                new SizeData("Mica", 100, 300),
-                                new SizeData("Medie", 120, 400),
-                                new SizeData("Mare", 150, 500)
-                        ),
-                        List.of(
-                                new IngredientData(
-                                        "Carne tocata",
-                                        List.of(new AllergenData("Lactoza"))
-                                ),
-                                new IngredientData(
-                                        "Legume proaspete",
-                                        List.of(new AllergenData("Sulfiti"))
-                                )
-                        ),
-                        List.of(
-                                new ExtraIngredientData("Sos de avocado", 6, 30)
-                        )
-                )
+                List.of(new ExtraIngredientData("Extra Mozzarella", 1.5f, 50))
+            ),
+            new ProductData(
+                "Pepperoni Pizza",
+                "pizza_pepperoni.jpg",
+                "Pizza",
+                List.of(
+                    new SizeData("Medium", 8.5f, 450),
+                    new SizeData("Large", 11.0f, 600)
+                ),
+                List.of(
+                    new IngredientData("Pepperoni", List.of(new AllergenData("Sodium Nitrite"), new AllergenData("Sulphites"))),
+                    new IngredientData("Mozzarella", List.of(new AllergenData("Lactose"))),
+                    new IngredientData("Tomato Sauce", List.of(new AllergenData("Sulphites")))
+                ),
+                List.of(new ExtraIngredientData("Jalapeños", 1.0f, 30))
+            ),
+            new ProductData(
+                "Quattro Formaggi Pizza",
+                "pizza_4_cheese.jpg",
+                "Pizza",
+                List.of(
+                    new SizeData("Medium", 9.0f, 500),
+                    new SizeData("Large", 12.0f, 650)
+                ),
+                List.of(
+                    new IngredientData("Mozzarella", List.of(new AllergenData("Lactose"))),
+                    new IngredientData("Gorgonzola", List.of(new AllergenData("Lactose"))),
+                    new IngredientData("Parmesan", List.of(new AllergenData("Lactose"))),
+                    new IngredientData("Emmental", List.of(new AllergenData("Lactose")))
+                ),
+                List.of(new ExtraIngredientData("Truffle Oil", 2.5f, 20))
+            ),
+
+            // Mexican
+            new ProductData(
+                "Beef Taco",
+                "taco_beef.jpg",
+                "Mexican",
+                List.of(new SizeData("Piece", 3.5f, 1)),
+                List.of(
+                        new IngredientData("Beef", List.of()),
+                        new IngredientData("Tortilla (wheat)", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Lettuce", List.of())
+                ),
+                List.of(new ExtraIngredientData("Guacamole", 1.2f, 25))
+            ),
+            new ProductData(
+                "Chicken Burrito",
+                "burrito_chicken.jpg",
+                "Mexican",
+                List.of(new SizeData("Standard", 6.0f, 1)),
+                List.of(
+                        new IngredientData("Chicken", List.of()),
+                        new IngredientData("Rice", List.of()),
+                        new IngredientData("Black Beans", List.of()),
+                        new IngredientData("Cheddar Cheese", List.of(new AllergenData("Lactose")))
+                ),
+                List.of(new ExtraIngredientData("Sour Cream", 1.0f, 30))
+            ),
+            new ProductData(
+                "Cheese Quesadilla",
+                "quesadilla_cheese.jpg",
+                "Mexican",
+                List.of(new SizeData("Standard", 5.5f, 1)),
+                List.of(
+                        new IngredientData("Tortilla (wheat)", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Mozzarella", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Cheddar", List.of(new AllergenData("Lactose")))
+                ),
+                List.of(new ExtraIngredientData("Pico de Gallo", 0.8f, 20))
+            ),
+
+            // Italian
+            new ProductData(
+                "Spaghetti Carbonara",
+                "carbonara.jpg",
+                "Italian",
+                List.of(new SizeData("Regular", 8.0f, 400)),
+                List.of(
+                        new IngredientData("Spaghetti (wheat)", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Egg", List.of(new AllergenData("Egg"))),
+                        new IngredientData("Parmesan", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Pancetta", List.of(new AllergenData("Sodium Nitrite")))
+                ),
+                List.of()
+            ),
+            new ProductData(
+                "Lasagna Bolognese",
+                "lasagna.jpg",
+                "Italian",
+                List.of(new SizeData("Portion", 9.5f, 450)),
+                List.of(
+                        new IngredientData("Lasagna Sheets (wheat)", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Beef Ragù", List.of(new AllergenData("Sulphites"))),
+                        new IngredientData("Bechamel Sauce", List.of(new AllergenData("Lactose"), new AllergenData("Egg")))
+                ),
+                List.of(new ExtraIngredientData("Parmesan extra", 1.5f, 30))
+            ),
+            new ProductData(
+                "Penne Arrabbiata",
+                "arrabbiata.jpg",
+                "Italian",
+                List.of(new SizeData("Regular", 7.0f, 400)),
+                List.of(
+                        new IngredientData("Penne (wheat)", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Tomato Chili Sauce", List.of(new AllergenData("Sulphites"))),
+                        new IngredientData("Parsley", List.of())
+                ),
+                List.of()
+            ),
+
+            // American
+            new ProductData(
+                "Cheeseburger",
+                "cheeseburger.jpg",
+                "American",
+                List.of(new SizeData("Single", 6.0f, 1)),
+                List.of(
+                        new IngredientData("Beef Patty", List.of()),
+                        new IngredientData("Cheddar Cheese", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Wheat Bun", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Pickles", List.of())
+                ),
+                List.of(new ExtraIngredientData("Bacon", 1.5f, 30))
+            ),
+            new ProductData(
+                "Hot Dog",
+                "hotdog.jpg",
+                "American",
+                List.of(new SizeData("Single", 4.5f, 1)),
+                List.of(
+                    new IngredientData("Sausage", List.of(new AllergenData("Sodium Nitrite"))),
+                    new IngredientData("Wheat Bun", List.of(new AllergenData("Gluten"))),
+                    new IngredientData("Onion", List.of())
+                ),
+                List.of(new ExtraIngredientData("Cheese sauce", 1.0f, 25))
+            ),
+            new ProductData(
+                "BBQ Ribs",
+                "bbq_ribs.jpg",
+                "American",
+                List.of(new SizeData("Half Rack", 12.0f, 500)),
+                List.of(
+                        new IngredientData("Pork Ribs", List.of()),
+                        new IngredientData("BBQ Sauce", List.of(new AllergenData("Sulfites")))
+                ),
+                List.of(new ExtraIngredientData("Coleslaw", 1.5f, 100))
+            ),
+
+            // Japanese
+            new ProductData(
+                "Sushi Platter",
+                "sushi_platter.jpg",
+                "Japanese",
+                List.of(new SizeData("Assorted", 14.0f, 10)),
+                List.of(
+                        new IngredientData("Rice", List.of()),
+                        new IngredientData("Seaweed", List.of()),
+                        new IngredientData("Salmon", List.of()),
+                        new IngredientData("Tuna", List.of()),
+                        new IngredientData("Soy Sauce", List.of(new AllergenData("Soy"), new AllergenData("Gluten")))
+                ),
+                List.of(new ExtraIngredientData("Wasabi", 0.5f, 5))
+            ),
+            new ProductData(
+                "Ramen",
+                "ramen.jpg",
+                "Japanese",
+                List.of(new SizeData("Regular", 10.0f, 500)),
+                List.of(
+                        new IngredientData("Wheat Noodles", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Chicken Broth", List.of(new AllergenData("Soy"), new AllergenData("Sulphites"))),
+                        new IngredientData("Egg", List.of(new AllergenData("Egg"))),
+                        new IngredientData("Pork", List.of())
+                ),
+                List.of()
+            ),
+            new ProductData(
+                    "Tempura",
+                    "tempura.jpg",
+                    "Japanese",
+                    List.of(new SizeData("Portion", 9.0f, 200)),
+                    List.of(
+                            new IngredientData("Shrimp", List.of()),
+                            new IngredientData("Vegetables", List.of()),
+                            new IngredientData("Batter (wheat)", List.of(new AllergenData("Gluten"), new AllergenData("Egg")))
+                    ),
+                    List.of(new ExtraIngredientData("Tempura Sauce", 0.7f, 30))
+            ),
+
+            // Korean
+            new ProductData(
+                    "Bibimbap",
+                    "bibimbap.jpg",
+                    "Korean",
+                    List.of(new SizeData("Bowl", 8.5f, 400)),
+                    List.of(
+                            new IngredientData("Rice", List.of()),
+                            new IngredientData("Beef", List.of()),
+                            new IngredientData("Vegetables", List.of()),
+                            new IngredientData("Egg", List.of(new AllergenData("Egg"))),
+                            new IngredientData("Gochujang", List.of())
+                    ),
+                    List.of()
+            ),
+            new ProductData(
+                    "Kimchi",
+                    "kimchi.jpg",
+                    "Korean",
+                    List.of(new SizeData("Portion", 4.0f, 150)),
+                    List.of(
+                            new IngredientData("Napa Cabbage", List.of()),
+                            new IngredientData("Chili Pepper", List.of()),
+                            new IngredientData("Garlic", List.of())
+                    ),
+                    List.of()
+            ),
+            new ProductData(
+                    "Korean Fried Chicken",
+                    "korean_fried_chicken.jpg",
+                    "Korean",
+                    List.of(new SizeData("Portion", 11.0f, 300)),
+                    List.of(
+                            new IngredientData("Chicken", List.of()),
+                            new IngredientData("Batter (wheat)", List.of(new AllergenData("Gluten"))),
+                            new IngredientData("Soy Sauce Glaze", List.of(new AllergenData("Soy"), new AllergenData("Sulphites")))
+                    ),
+                    List.of()
+            ),
+
+            // Bakery
+            new ProductData(
+                    "Croissant",
+                    "croissant.jpg",
+                    "Bakery",
+                    List.of(new SizeData("Piece", 2.5f, 70)),
+                    List.of(
+                            new IngredientData("Wheat Flour", List.of(new AllergenData("Gluten"))),
+                            new IngredientData("Butter", List.of(new AllergenData("Lactose")))
+                    ),
+                    List.of()
+            ),
+            new ProductData(
+                "Pain au Chocolat",
+                "pain_chocolat.jpg",
+                "Bakery",
+                List.of(new SizeData("Piece", 3.0f, 80)),
+                List.of(
+                    new IngredientData("Wheat Flour", List.of(new AllergenData("Gluten"))),
+                    new IngredientData("Butter", List.of(new AllergenData("Lactose"))),
+                    new IngredientData("Chocolate", List.of(new AllergenData("Soy")))
+                ),
+                List.of()
+            ),
+            new ProductData(
+                    "Bagel with Cream Cheese",
+                    "bagel_cream_cheese.jpg",
+                    "Bakery",
+                    List.of(new SizeData("Piece", 4.0f, 120)),
+                    List.of(
+                            new IngredientData("Wheat Flour", List.of(new AllergenData("Gluten"))),
+                            new IngredientData("Cream Cheese", List.of(new AllergenData("Lactose")))
+                    ),
+                    List.of(new ExtraIngredientData("Smoked Salmon", 2.0f, 30))
+            ),
+
+            // Desserts
+            new ProductData(
+                "Tiramisu",
+                "tiramisu.jpg",
+                "Desserts",
+                List.of(new SizeData("Slice", 4.5f, 120)),
+                List.of(
+                        new IngredientData("Mascarpone", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Egg", List.of(new AllergenData("Egg"))),
+                        new IngredientData("Coffee", List.of())
+                ),
+                List.of()
+            ),
+            new ProductData(
+                "Cheesecake",
+                "cheesecake.jpg",
+                "Desserts",
+                List.of(new SizeData("Slice", 5.0f, 130)),
+                List.of(
+                        new IngredientData("Cream Cheese", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Egg", List.of(new AllergenData("Egg"))),
+                        new IngredientData("Wheat Crust", List.of(new AllergenData("Gluten")))
+                ),
+                List.of()
+            ),
+            new ProductData(
+                "Panna Cotta",
+                "panna_cotta.jpg",
+                "Desserts",
+                List.of(new SizeData("Portion", 4.0f, 110)),
+                List.of(
+                        new IngredientData("Cream", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Gelatin", List.of())
+                ),
+                List.of()
+            ),
+            // Drinks
+            new ProductData(
+                "Coca-Cola 330ml",
+                "coca_cola.jpg",
+                "Drinks",
+                List.of(new SizeData("Standard", 2.0f, 330)),
+                List.of(
+                        new IngredientData("Carbonated Water", List.of()),
+                        new IngredientData("Sugar", List.of()),
+                        new IngredientData("Caffeine", List.of())
+                ),
+                List.of()
+            ),
+            new ProductData(
+                "Sparkling Water",
+                "sparkling_water.jpg",
+                "Drinks",
+                List.of(new SizeData("Standard", 1.5f, 500)),
+                List.of(
+                        new IngredientData("Carbonated Mineral Water", List.of())
+                ),
+                List.of()
+            ),
+            new ProductData(
+                "Orange Juice",
+                "orange_juice.jpg",
+                "Drinks",
+                List.of(new SizeData("Glass", 2.5f, 300)),
+                List.of(
+                        new IngredientData("100% Orange Juice", List.of(new AllergenData("Histamine")))
+                ),
+                List.of()
+            ),
+            new ProductData(
+                "Espresso",
+                "espresso.jpg",
+                "Drinks",
+                List.of(
+                    new SizeData("Single", 1.8f, 30),
+                    new SizeData("Double", 2.5f, 60)
+                ),
+                List.of(
+                    new IngredientData("Arabica Coffee", List.of())
+                ),
+                List.of()
+            ),
+
+            // Salads
+            new ProductData(
+                    "Caesar Salad",
+                    "caesar_salad.jpg",
+                    "Salads",
+                    List.of(new SizeData("Bowl", 7.0f, 300)),
+                    List.of(
+                        new IngredientData("Romaine Lettuce", List.of()),
+                        new IngredientData("Grilled Chicken", List.of()),
+                        new IngredientData("Parmesan", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Croutons", List.of(new AllergenData("Gluten"))),
+                        new IngredientData("Caesar Dressing", List.of(new AllergenData("Egg"), new AllergenData("Fish")))
+                    ),
+                    List.of(new ExtraIngredientData("Bacon", 1.2f, 30))
+            ),
+            new ProductData(
+                    "Greek Salad",
+                    "greek_salad.jpg",
+                    "Salads",
+                    List.of(new SizeData("Bowl", 6.5f, 280)),
+                    List.of(
+                        new IngredientData("Tomatoes", List.of()),
+                        new IngredientData("Cucumber", List.of()),
+                        new IngredientData("Feta Cheese", List.of(new AllergenData("Lactose"))),
+                        new IngredientData("Olives", List.of()),
+                        new IngredientData("Onion", List.of())
+                    ),
+                    List.of(new ExtraIngredientData("Olive Oil", 0.5f, 15))
+            ),
+            new ProductData(
+                "Quinoa Avocado Salad",
+                "quinoa_avocado_salad.jpg",
+                "Salads",
+                List.of(new SizeData("Bowl", 7.5f, 320)),
+                List.of(
+                    new IngredientData("Quinoa", List.of()),
+                    new IngredientData("Avocado", List.of()),
+                    new IngredientData("Cherry Tomatoes", List.of()),
+                    new IngredientData("Spinach", List.of())
+                ),
+                List.of(new ExtraIngredientData("Goat Cheese", 1.0f, 30))
+            ),
+
+            // Seafood
+            new ProductData(
+                    "Grilled Salmon",
+                    "grilled_salmon.jpg",
+                    "Seafood",
+                    List.of(new SizeData("Portion", 13.0f, 200)),
+                    List.of(
+                        new IngredientData("Salmon", List.of(new AllergenData("Fish"))),
+                        new IngredientData("Lemon", List.of()),
+                        new IngredientData("Olive Oil", List.of())
+                    ),
+                    List.of(new ExtraIngredientData("Garlic Butter", 1.0f, 20))
+            ),
+            new ProductData(
+                "Fried Calamari",
+                "fried_calamari.jpg",
+                "Seafood",
+                List.of(new SizeData("Portion", 11.0f, 180)),
+                List.of(
+                    new IngredientData("Squid", List.of(new AllergenData("Molluscs"))),
+                    new IngredientData("Flour Batter", List.of(new AllergenData("Gluten"), new AllergenData("Egg"))),
+                    new IngredientData("Lemon", List.of())
+                ),
+                List.of(new ExtraIngredientData("Aioli Sauce", 0.8f, 25))
+            ),
+            new ProductData(
+                "Shrimp Cocktail",
+                "shrimp_cocktail.jpg",
+                "Seafood",
+                List.of(new SizeData("Glass", 12.0f, 150)),
+                List.of(
+                    new IngredientData("Shrimp", List.of(new AllergenData("Crustaceans"))),
+                    new IngredientData("Cocktail Sauce", List.of(new AllergenData("Egg"), new AllergenData("Mustard")))
+                ),
+                List.of(new ExtraIngredientData("Extra Shrimp", 2.0f, 40))
+            )
         );
 
-       productsData.forEach(this.productService::seed);
+        productsData.forEach(this.productService::seed);
     }
-
-//    public void seedProducts() {
-//        log.info("Seeding products...");
-//
-//        CategoryModel pizzaCategory = categoryRepository.findById(UUID.fromString("e0d8d1f5-4a89-4a00-9d2e-ac062be90160")).orElseThrow();
-//        CategoryModel drinksCategory = categoryRepository.findByName("Bauturi");
-//        CategoryModel mexicanCategory = categoryRepository.findByName("Mexican");
-//        CategoryModel americanCategory = categoryRepository.findByName("American");
-//
-//        List<IngredientModel> ingredients = List.of(
-//                new IngredientModel("Unt", Set.of(
-//                        new AllergenModel("Lactoza"),
-//                        new AllergenModel("Histamina")
-//                )),
-//                new IngredientModel("Miere", Set.of(
-//                        new AllergenModel("Oleuropeina"),
-//                        new AllergenModel("Histamina"),
-//                        new AllergenModel("Sulfiti")
-//                ))
-//        );
-//
-//        Set<ExtraIngredientModel> extraIngredients = Set.of(
-//                new ExtraIngredientModel("Sos rosii dulce", 4, 30),
-//                new ExtraIngredientModel("Sos rosii iute", 5, 30)
-//        );
-//
-//        Set<ProductSizeModel> sizes = Set.of(
-//                new ProductSizeModel("Mica", 100, 300),
-//                new ProductSizeModel("Medie", 120, 400),
-//                new ProductSizeModel("Mare", 150, 500)
-//        );
-//
-//        for (int i = 1; i <= 5; i++) {
-//            productRepository.save(new ProductModel("Pizza Margherita " + i, "uri", pizzaCategory, sizes, ingredients, extraIngredients));
-//            productRepository.save(new ProductModel("Coca-Cola " + i, "uri", drinksCategory, sizes, ingredients, extraIngredients));
-//            productRepository.save(new ProductModel("Taco Mexican " + i, "uri", mexicanCategory, sizes, ingredients, extraIngredients));
-//            productRepository.save(new ProductModel("Burger American " + i, "uri", americanCategory, sizes, ingredients, extraIngredients));
-//        }
-//
-//        log.info("Products seeding completed.");
-//    }
-
-
-//    public void seedProducts() {
-//        log.info("Seeding products...");
-
-        // Uncomment the following lines to seed products
-
-
-//        CategoryModel pizza = categoryRepository.findByName("Pizza").orElseThrow();
-//        CategoryModel bauturi = categoryRepository.findByName("Bauturi").orElseThrow();
-//        CategoryModel mexican = categoryRepository.findByName("Mexican").orElseThrow();
-//        CategoryModel american = categoryRepository.findByName("American").orElseThrow();
-//
-//
-//        AllergenModel lactoza = allergenRepository.save(new AllergenModel("Lactoza"));
-//        AllergenModel histamina = allergenRepository.save(new AllergenModel("Histamina"));
-//        AllergenModel oleuropeina = allergenRepository.save(new AllergenModel("Oleuropeina"));
-//        AllergenModel sulfiti = allergenRepository.save(new AllergenModel("Sulfiti"));
-//
-//
-//        IngredientModel unt = ingredientRepository.save(new IngredientModel("Unt", Set.of(lactoza, histamina)));
-//        IngredientModel miere = ingredientRepository.save(new IngredientModel("Miere", Set.of(oleuropeina, histamina, sulfiti)));
-//
-//        ExtraIngredientModel sosDulce = extraIngredientRepository.save(new ExtraIngredientModel("Sos rosii dulce", 4f, 30));
-//        ExtraIngredientModel sosIute = extraIngredientRepository.save(new ExtraIngredientModel("Sos rosii iute", 5f, 30));
-//
-//
-//        SizeModel mica = sizeRepository.findByName("Mica").orElseThrow();
-//        SizeModel medie = sizeRepository.findByName("Medie").orElseThrow();
-//        SizeModel mare = sizeRepository.findByName("Mare").orElseThrow();
-//
-//        for (int i = 1; i <= 5; i++) {
-//            ProductModel pizzaProduct = new ProductModel("Pizza Margherita " + i, "img/pizza.jpg", pizza, null, Set.of(unt, miere), Set.of(sosDulce, sosIute));
-//            productRepository.save(pizzaProduct);
-//            productSizeRepository.save(new ProductSizeModel(mica, pizzaProduct));
-//            productSizeRepository.save(new ProductSizeModel(medie, pizzaProduct));
-//            productSizeRepository.save(new ProductSizeModel(mare, pizzaProduct));
-//
-//            ProductModel drink = new ProductModel("Suc Fructe " + i, "img/suc.jpg", bauturi, null, Set.of(unt), Set.of(sosDulce));
-//            productRepository.save(drink);
-//            productSizeRepository.save(new ProductSizeModel(mica, drink));
-//
-//            ProductModel mexicanProd = new ProductModel("Taco " + i, "img/taco.jpg", mexican, null, Set.of(miere), Set.of(sosIute));
-//            productRepository.save(mexicanProd);
-//            productSizeRepository.save(new ProductSizeModel(mica, mexicanProd));
-//            productSizeRepository.save(new ProductSizeModel(medie, mexicanProd));
-//
-//            ProductModel burger = new ProductModel("Burger " + i, "img/burger.jpg", american, null, Set.of(unt, miere), Set.of(sosDulce));
-//            productRepository.save(burger);
-//            productSizeRepository.save(new ProductSizeModel(mare, burger));
-//        }
-
-//        log.info("Products seeding completed.");
-//    }
-    }
+}
