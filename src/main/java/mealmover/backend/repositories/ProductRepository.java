@@ -35,4 +35,24 @@ public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
         LIMIT 4
         """, nativeQuery = true)
     List<ProductModel> findTopFourBestSellingProductsByCategoryId(@Param("categoryId") UUID categoryId);
+
+    @Query(value = """
+        SELECT p.* FROM products p
+        JOIN reviews r ON p.id = r.product_id
+        GROUP BY p.id
+        ORDER BY COUNT(r.id) DESC
+        LIMIT 4
+    """, nativeQuery = true)
+    List<ProductModel> findTop4ReviewedFoods();
+
+    @Query
+(value = """
+        SELECT p.* FROM products p
+        JOIN reviews r ON p.id = r.product_id
+        WHERE p.category_id = :categoryId
+        GROUP BY p.id
+        ORDER BY COUNT(r.id) DESC
+        LIMIT 4
+    """, nativeQuery = true)
+    List<ProductModel> findTop4ReviewedDrinks();
 }

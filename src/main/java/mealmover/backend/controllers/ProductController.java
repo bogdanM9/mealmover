@@ -40,6 +40,18 @@ public class ProductController {
 //        return ResponseEntity.ok(responseDtos);
 //    }
 
+    @GetMapping("/top-reviewed-foods")
+    public ResponseEntity<List<ProductResponseDto>> getTopReviewedFoods() {
+        List<ProductResponseDto> responseDtos = this.productService.getTop4ReviewedFoods();
+        return ResponseEntity.ok(responseDtos);
+    }
+
+    @GetMapping("/top-reviewed-drinks")
+    public ResponseEntity<List<ProductResponseDto>> getTopReviewedDrinks() {
+        List<ProductResponseDto> responseDtos = this.productService.getTop4ReviewedDrinks();
+        return ResponseEntity.ok(responseDtos);
+    }
+
     @GetMapping("/top-selling/drinks/{categoryId}")
     public ResponseEntity<List<ProductResponseDto>> getTopSellingDrinks(@PathVariable("categoryId") UUID categoryId) {
         List<ProductResponseDto> responseDtos = this.productService.getTopSellingByCategory(categoryId);

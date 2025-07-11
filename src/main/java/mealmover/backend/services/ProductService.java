@@ -222,4 +222,31 @@ public class ProductService {
         log.info("Seeded product with name: {}", savedProduct.getName());
 
     }
+
+    public List<ProductResponseDto> getTop4ReviewedFoods() {
+        List<ProductModel> topReviewedFoods = this.productRepository.findTop4ReviewedFoods();
+
+        if (topReviewedFoods.isEmpty()) {
+            log.warn("No top reviewed foods found");
+            return List.of();
+        }
+
+        return topReviewedFoods.stream()
+                .map(this.productMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ProductResponseDto> getTop4ReviewedDrinks() {
+        List<ProductModel> topReviewedDrinks = this.productRepository.findTop4ReviewedDrinks();
+
+        if (topReviewedDrinks.isEmpty()) {
+            log.warn("No top reviewed drinks found");
+            return List.of();
+        }
+
+        return topReviewedDrinks.stream()
+                .map(this.productMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
