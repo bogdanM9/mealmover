@@ -4,11 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mealmover.backend.dtos.requests.CreateCategoryRequestDto;
+import mealmover.backend.dtos.requests.CategoryCreateRequestDto;
 import mealmover.backend.dtos.requests.ProductCreateRequestDto;
 import mealmover.backend.exceptions.BadRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
@@ -32,11 +30,11 @@ public class MapperService {
         }
     }
 
-    public CreateCategoryRequestDto parseCategoryCreateData(String data) {
+    public CategoryCreateRequestDto parseCategoryCreateData(String data) {
         try {
             log.info("Attempt to parse category data");
 
-            CreateCategoryRequestDto requestDto = this.objectMapper.readValue(data, CreateCategoryRequestDto.class);
+            CategoryCreateRequestDto requestDto = this.objectMapper.readValue(data, CategoryCreateRequestDto.class);
 
             log.info("Category data has been parsed");
 

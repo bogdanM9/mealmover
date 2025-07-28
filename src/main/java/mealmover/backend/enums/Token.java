@@ -4,7 +4,7 @@ import mealmover.backend.utils.StringUtils;
 
 public enum Token {
     ACCESS,
-    REGISTRATION,
+    ACTIVATE,
     CHANGE_EMAIL,
     RESET_PASSWORD;
 

@@ -13,66 +13,51 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class TokenService {
-    private final JwtUtils jwtUtils;
+    private final JwtService jwtService;
 
     /**
-     * Generate a token for account registration confirmation
+     * Generate a token for access
      */
-    public String generateRegistrationClientToken(String email) {
-        return this.jwtUtils.generateRegistrationToken(email);
+    public String generateAccessToken(Authentication authentication) {
+        return this.jwtService.generateAccessToken(authentication);
+    }
+
+    /**
+     * Generate a token for activate
+     */
+    public String generateActivateToken(String email) {
+        return this.jwtService.generateActivateToken(email);
     }
 
     /**
      * Generate a token for password reset
      */
     public String generateResetPasswordToken(String email, UUID userId) {
-        return this.jwtUtils.generateResetPasswordToken(email, userId);
-    }
-
-    /**
-     * Generate a token for access
-     */
-    public String generateAccessToken(Authentication authentication) {
-        return this.jwtUtils.generateAccessToken(authentication);
+        return this.jwtService.generateResetPasswordToken(email, userId);
     }
 
     /**
      * Validate a registration token
      */
-    public String validateRegistrationToken(String token) {
-        this.jwtUtils.validateToken(token);
-        this.jwtUtils.validateTokenType(token, Token.REGISTRATION);
-        return this.jwtUtils.getUsernameFromToken(token);
+    public String validateActivateToken(String token) {
+        this.jwtService.validateToken(token);
+        this.jwtService.validateTokenType(token, Token.ACTIVATE);
+        return this.jwtService.getUsernameFromToken(token);
     }
 
     /**
      * Validate a password reset token
      */
     public String validateResetPasswordToken(String token) {
-        this.jwtUtils.validateToken(token);
-        this.jwtUtils.validateTokenType(token, Token.RESET_PASSWORD);
-        return this.jwtUtils.getUsernameFromToken(token);
-    }
-
-    /**
-     * Get user ID from token
-     */
-    public UUID getUserIdFromToken(String token) {
-        return this.jwtUtils.getIdFromToken(token);
-    }
-
-    /**
-     * Get email from token
-     */
-    public String getEmailFromToken(String token) {
-        return this.jwtUtils.getUsernameFromToken(token);
+        this.jwtService.validateToken(token);
+        this.jwtService.validateTokenType(token, Token.RESET_PASSWORD);
+        return this.jwtService.getUsernameFromToken(token);
     }
 
     /**
      * Get token type
      */
     public Token getTokenType(String token) {
-        return this.jwtUtils.getTokenType(token);
+        return this.jwtService.getTokenType(token);
     }
-
 }

@@ -2,7 +2,7 @@ package mealmover.backend.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mealmover.backend.dtos.requests.CreateCategoryRequestDto;
+import mealmover.backend.dtos.requests.CategoryCreateRequestDto;
 import mealmover.backend.dtos.responses.CategoryResponseDto;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.CategoryMapper;
@@ -25,7 +25,7 @@ public class CategoryService {
 
     private final FileStorageService fileStorageService;
 
-    public CategoryResponseDto create(MultipartFile image, CreateCategoryRequestDto requestDto) {
+    public CategoryResponseDto create(MultipartFile image, CategoryCreateRequestDto requestDto) {
 
         String name = requestDto.getName();
 

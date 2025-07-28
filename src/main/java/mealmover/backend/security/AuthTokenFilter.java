@@ -3,7 +3,6 @@ package mealmover.backend.security;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -23,7 +22,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private final JwtUtils jwtUtils;
+    private final JwtService jwtService;
 
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -37,7 +36,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         if (jwt != null) {
             if (validateAccessToken(jwt)) {
-                String username = this.jwtUtils.getUsernameFromToken(jwt);
+                String username = this.jwtService.getUsernameFromToken(jwt);
 
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
@@ -73,8 +72,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
      */
     private boolean validateAccessToken(String token) {
         try {
-            this.jwtUtils.validateToken(token);
-            Token tokenType = this.jwtUtils.getTokenType(token);
+            this.jwtService.validateToken(token);
+            Token tokenType = this.jwtService.getTokenType(token);
             return tokenType == Token.ACCESS;
         } catch(ExpiredJwtException e) {
             log.error("JWT token expired: {}", e.getMessage());

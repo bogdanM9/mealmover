@@ -1,6 +1,5 @@
 package mealmover.backend.controllers;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,27 +20,27 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class  AuthController {
+public class AuthController {
     @Value("${application.security.jwt.tokens.access.expiration}")
     private long jwtAccessTokenExpiration;
     private final AuthService authService;
     private final SecurityService securityService;
 
-    @PostMapping("/register-client")
-    public ResponseEntity<MessageResponseDto> registerClient(
-        @Valid @RequestBody AuthRegisterClientRequestDto requestDto
+    @PostMapping("/register")
+    public ResponseEntity<MessageResponseDto> register(
+        @Valid @RequestBody AuthRegisterRequestDto requestDto
     ) {
-        this.authService.registerClient(requestDto);
-        MessageResponseDto responseDto = MessageResponseDto.info(AuthConstants.REGISTRATION_SUCCESS);
+        this.authService.register(requestDto);
+        MessageResponseDto responseDto = MessageResponseDto.info(AuthConstants.REGISTER_SUCCESS);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/activate-client")
-    public ResponseEntity<MessageResponseDto> activateClient(
-        @Valid @RequestBody AuthActivateClientRequestDto requestDto
+    @PostMapping("/activate")
+    public ResponseEntity<MessageResponseDto> activate(
+        @Valid @RequestBody AuthActivateRequestDto requestDto
     ) {
-        this.authService.activateClient(requestDto);
-        MessageResponseDto responseDto = MessageResponseDto.success(AuthConstants.ACTIVATION_SUCCESS);
+        this.authService.activate(requestDto);
+        MessageResponseDto responseDto = MessageResponseDto.success(AuthConstants.ACTIVATE_SUCCESS);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -74,33 +73,33 @@ public class  AuthController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<MessageResponseDto> forgotPassword(@Valid @RequestBody AuthForgotPasswordRequestDto requestDto) {
-        this.authService.forgotPassword(requestDto);
-        return ResponseEntity.ok(MessageResponseDto.info("An email has been sent to your email address with instructions to reset your password."));
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<MessageResponseDto> resetPassword(@Valid @RequestBody AuthResetPasswordRequestDto requestDto) {
-        this.authService.resetPassword(requestDto);
-        return ResponseEntity.ok(MessageResponseDto.success("Your password have been changed successfully."));
-    }
-
-    @PostMapping("/change-email")
-    public ResponseEntity<String> changeEmail(@Valid @RequestBody UserChangeEmail requestDto) {
-        authService.changeEmail(requestDto);
-        return ResponseEntity.ok("CHANGE-EMAIL");
-    }
-
-    @PostMapping("/confirm-change-email")
-    public ResponseEntity<String> confirmChangeEmail(@RequestBody AuthActivateClientRequestDto token) {
-        authService.confirmChangeEmail(token);
-        return ResponseEntity.ok("CONFIRM-CHANGE-EMAIL");
-    }
-
-    @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody UserChangePassword requestDto) {
-        authService.changePassword(requestDto);
-        return ResponseEntity.ok("CHANGE-PASSWORD");
-    }
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<MessageResponseDto> forgotPassword(@Valid @RequestBody AuthForgotPasswordRequestDto requestDto) {
+//        this.authService.forgotPassword(requestDto);
+//        return ResponseEntity.ok(MessageResponseDto.info("An email has been sent to your email address with instructions to reset your password."));
+//    }
+//
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<MessageResponseDto> resetPassword(@Valid @RequestBody AuthResetPasswordRequestDto requestDto) {
+//        this.authService.resetPassword(requestDto);
+//        return ResponseEntity.ok(MessageResponseDto.success("Your password have been changed successfully."));
+//    }
+//
+//    @PostMapping("/change-email")
+//    public ResponseEntity<String> changeEmail(@Valid @RequestBody UserChangeEmail requestDto) {
+//        authService.changeEmail(requestDto);
+//        return ResponseEntity.ok("CHANGE-EMAIL");
+//    }
+//
+//    @PostMapping("/confirm-change-email")
+//    public ResponseEntity<String> confirmChangeEmail(@RequestBody AuthActivateRequestDto token) {
+//        authService.confirmChangeEmail(token);
+//        return ResponseEntity.ok("CONFIRM-CHANGE-EMAIL");
+//    }
+//
+//    @PostMapping("/change-password")
+//    public ResponseEntity<String> changePassword(@RequestBody UserChangePassword requestDto) {
+//        authService.changePassword(requestDto);
+//        return ResponseEntity.ok("CHANGE-PASSWORD");
+//    }
 }

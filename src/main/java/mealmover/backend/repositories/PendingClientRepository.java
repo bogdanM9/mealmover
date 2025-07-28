@@ -13,9 +13,11 @@ import java.util.UUID;
 
 @Repository
 public interface PendingClientRepository extends JpaRepository<PendingClientModel, UUID> {
-    Optional<PendingClientModel> findByEmail(String name);
-
     boolean existsByEmail(String email);
+
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    Optional<PendingClientModel> findByEmail(String name);
 
     @Modifying
     @Transactional

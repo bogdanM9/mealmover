@@ -16,18 +16,50 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
-public class JwtUtils {
+public class JwtService {
     @Value("${application.security.jwt.secret}")
     private String jwtSecret;
 
     @Value("${application.security.jwt.tokens.access.expiration}")
     private int jwtAccessTokenExpiration;
 
+    @Value("${application.security.jwt.tokens.activate.expiration}")
+    private int jwtActivateTokenExpiration;
+
     @Value("${application.security.jwt.tokens.reset-password.expiration}")
     private int jwtResetPasswordTokenExpiration;
 
-    @Value("${application.security.jwt.tokens.registration-client.expiration}")
-    private int jwtRegistrationTokenExpiration;
+    /**
+     * Get the signing key for JWT operations
+     */
+    private Key getSigningKey() {
+        byte[] keyBytes = jwtSecret.getBytes();
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
+     * Extract token type from token
+     */
+    public Token getTokenType(String token) {
+        String typeStr = getClaimsFromToken(token).get("type", String.class);
+        return Token.valueOf(typeStr);
+    }
+
+    /**
+     * Core method to generate a token with given claims and expiration
+     */
+    private String generateToken(Map<String, Object> claims, String subject, int expirationMs) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expirationMs);
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(subject)
+            .setIssuedAt(now)
+            .setExpiration(expiryDate)
+            .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+            .compact();
+    }
 
     /**
      * Generate JWT token for authentication
@@ -51,12 +83,19 @@ public class JwtUtils {
     }
 
     /**
+     * Extract username from token
+     */
+    public String getUsernameFromToken(String token) {
+        return getClaimsFromToken(token).getSubject();
+    }
+
+    /**
      * Generate token for registration confirmation
      */
-    public String generateRegistrationToken(String email) {
+    public String generateActivateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("type", Token.REGISTRATION.name());
-        return generateToken(claims, email, jwtRegistrationTokenExpiration);
+        claims.put("type", Token.ACTIVATE.name());
+        return generateToken(claims, email, jwtActivateTokenExpiration);
     }
 
     /**
@@ -69,53 +108,6 @@ public class JwtUtils {
         claims.put("type", Token.RESET_PASSWORD.name());
 
         return generateToken(claims, email, jwtResetPasswordTokenExpiration);
-    }
-
-    /**
-     * Core method to generate a token with given claims and expiration
-     */
-    private String generateToken(Map<String, Object> claims, String subject, int expirationMs) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expirationMs);
-
-        return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(subject)
-            .setIssuedAt(now)
-            .setExpiration(expiryDate)
-            .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-            .compact();
-    }
-
-    /**
-     * Get the signing key for JWT operations
-     */
-    private Key getSigningKey() {
-        byte[] keyBytes = jwtSecret.getBytes();
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    /**
-     * Extract username from token
-     */
-    public String getUsernameFromToken(String token) {
-        return getClaimsFromToken(token).getSubject();
-    }
-
-    /**
-     * Extract user ID from token
-     */
-    public UUID getIdFromToken(String token) {
-        String idStr = getClaimsFromToken(token).get("id").toString();
-        return UUID.fromString(idStr);
-    }
-
-    /**
-     * Extract token type from token
-     */
-    public Token getTokenType(String token) {
-        String typeStr = getClaimsFromToken(token).get("type", String.class);
-        return Token.valueOf(typeStr);
     }
 
     /**
@@ -139,6 +131,11 @@ public class JwtUtils {
             .parseClaimsJws(token);
     }
 
+    public String extractSubject(String token) {
+        Claims claims = getClaimsFromToken(token);
+        return claims.getSubject();
+    }
+
     /**
      * Validate token and check if it matches the expected type
      */
@@ -150,21 +147,5 @@ public class JwtUtils {
         if (actualType != expectedType) {
             throw new JwtException("Invalid token type: expected " + expectedType + " but found " + actualType);
         }
-    }
-
-    public String extractEmail(String token) {
-        try {
-            Claims claims = getClaimsFromToken(token);
-            return claims.getSubject();
-        } catch (JwtException e) {
-            throw new JwtException("Invalid token: " + e.getMessage(), e);
-        }
-    }
-
-    public String generateChangeEmailToken( String newEmail) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("type", Token.CHANGE_EMAIL.name());
-        claims.put("newEmail", newEmail);
-        return generateToken(claims, newEmail, jwtRegistrationTokenExpiration);
     }
 }

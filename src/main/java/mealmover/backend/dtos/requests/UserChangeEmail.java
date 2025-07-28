@@ -7,5 +7,4 @@ import lombok.Setter;
 @Data
 public class UserChangeEmail {
     private String newEmail;
-    private String password;
 }

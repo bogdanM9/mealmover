@@ -35,7 +35,7 @@ public class EmailService {
     }
 
     @Async
-    public void sendActivateClientAccountEmail(String to, String token) {
+    public void sendActivateEmail(String to, String token) {
         logger.info("Sending activate account email to {}", to);
         String subject = "[%s] Account activation".formatted(this.appName);
         String content = """
@@ -44,21 +44,12 @@ public class EmailService {
         this.sendEmail(to, subject, content);
     }
 
-    public void sendForgotPasswordEmail(String email, String token) {
+    public void sendResetPasswordEmail(String email, String token) {
         logger.info("Sending reset password email to {}", email);
         String subject = "[%s] Reset password".formatted(this.appName);
         String content = """
             In order to reset your password, you need to click on next link: %s/reset-password?token=%s
         """.formatted(this.frontendUrl, token);
-        this.sendEmail(email, subject, content);
-    }
-
-    public void sendChangeEmail(String email, String newEmail, String token) {
-        logger.info("Sending change email email to {}", email);
-        String subject = "[%s] Email change".formatted(this.appName);
-        String content = """
-            In order to change your email, you need to click on next link: %s/change-email?token=%s&newEmail=%s
-        """.formatted(this.frontendUrl, token, newEmail);
         this.sendEmail(email, subject, content);
     }
 }

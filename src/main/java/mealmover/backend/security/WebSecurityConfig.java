@@ -23,21 +23,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
     private static final String[] WHITE_LIST_URL = {
         "/api/auth/login",
-        "/api/auth/register-client",
-        "/api/auth/activate-client",
+        "/api/auth/register",
+        "/api/auth/activate",
+
         "/api/roles",
         "/api/products",
         "/api/categories",
         "/api/files/**",
     };
 
-    private final JwtUtils jwtUtils;
+    private final JwtService jwtService;
     private final AuthEntryPointJwt authEntryPointJwt;
     private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter(jwtUtils, userDetailsService);
+        return new AuthTokenFilter(jwtService, userDetailsService);
     }
 
     @Bean

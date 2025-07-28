@@ -24,24 +24,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
     private final RoleService roleService;
-    private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
-
-    private final ProductRepository productRepository;
-
-    private final AllergenRepository allergenRepository;
-
-    private final IngredientRepository ingredientRepository;
-
-    private final ExtraIngredientRepository extraIngredientRepository;
-
-    private final SizeRepository sizeRepository;
-
-    private final ProductSizeRepository productSizeRepository;
-
     private final ProductService productService;
-
-
+    private final CategoryService categoryService;
 
     @Value("${application.data.seeding.enabled:true}")
     private boolean seedingEnabled;
@@ -82,16 +66,16 @@ public class DataSeeder implements CommandLineRunner {
 
         List<CategoryData> categoriesData = List.of(
             new CategoryData("Pizza", "pizza.png"),
-            new CategoryData("Mexican", "mexican.png"),
-            new CategoryData("Italian", "italian.png"),
-            new CategoryData("American", "american.png"),
-            new CategoryData("Japanese", "japanese.png"),
             new CategoryData("Korean", "korean.png"),
             new CategoryData("Bakery", "bakery.png"),
-            new CategoryData("Desserts", "desserts.png"),
             new CategoryData("Drinks", "drinks.png"),
             new CategoryData("Salads", "salads.png"),
-            new CategoryData("Seafood", "seafood.png")
+            new CategoryData("Mexican", "mexican.png"),
+            new CategoryData("Italian", "italian.png"),
+            new CategoryData("Seafood", "seafood.png"),
+            new CategoryData("American", "american.png"),
+            new CategoryData("Japanese", "japanese.png"),
+            new CategoryData("Desserts", "desserts.png")
         );
 
         categoriesData.forEach(this.categoryService::seed);
@@ -171,10 +155,10 @@ public class DataSeeder implements CommandLineRunner {
                 "Mexican",
                 List.of(new SizeData("Standard", 6.0f, 1)),
                 List.of(
-                        new IngredientData("Chicken", List.of()),
-                        new IngredientData("Rice", List.of()),
-                        new IngredientData("Black Beans", List.of()),
-                        new IngredientData("Cheddar Cheese", List.of(new AllergenData("Lactose")))
+                    new IngredientData("Chicken", List.of()),
+                    new IngredientData("Rice", List.of()),
+                    new IngredientData("Black Beans", List.of()),
+                    new IngredientData("Cheddar Cheese", List.of(new AllergenData("Lactose")))
                 ),
                 List.of(new ExtraIngredientData("Sour Cream", 1.0f, 30))
             ),

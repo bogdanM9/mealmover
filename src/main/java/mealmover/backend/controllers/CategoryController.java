@@ -1,9 +1,8 @@
 package mealmover.backend.controllers;
 
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import mealmover.backend.dtos.requests.CreateCategoryRequestDto;
+import mealmover.backend.dtos.requests.CategoryCreateRequestDto;
 import mealmover.backend.dtos.responses.CategoryResponseDto;
 import mealmover.backend.dtos.responses.MessageResponseDto;
 import mealmover.backend.services.CategoryService;
@@ -28,7 +27,7 @@ public class CategoryController {
                 @RequestParam("image") MultipartFile image,
                 @RequestParam("data") String data
     ) {
-            CreateCategoryRequestDto requestDto = this.mapperService.parseCategoryCreateData(data);
+            CategoryCreateRequestDto requestDto = this.mapperService.parseCategoryCreateData(data);
             CategoryResponseDto response = this.categoryService.create(image, requestDto);
             return ResponseEntity.ok(response);
         }

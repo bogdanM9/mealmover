@@ -36,11 +36,7 @@ application:
       tokens:
         access:
           expiration: 86400000  # 24 hours in milliseconds
-        registration-client:
-          expiration: 86400000  # 24 hours (adjust as needed)
-        registration-driver:
-          expiration: 86400000  # 24 hours (adjust as needed)
-        registration-operator:
+        activate:
           expiration: 86400000  # 24 hours (adjust as needed)
         reset-password:
           expiration: 3600000   # 1 hour (typically shorter for security)

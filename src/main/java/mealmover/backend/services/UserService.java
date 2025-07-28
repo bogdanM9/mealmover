@@ -85,6 +85,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserModel getModelById(UUID id) {
+        return this.userRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException(UserConstants.NOT_FOUND_BY_ID));
+    }
+
+    @Transactional(readOnly = true)
     public UserModel getModelByEmail(String email) {
         return this.userRepository
             .findByEmail(email)

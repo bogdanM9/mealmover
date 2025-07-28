@@ -33,8 +33,8 @@ public class SecurityService {
         Role role = this.getCurrentUserFirstRole();
 
         return switch (role) {
-            case CLIENT -> this.clientDataService.getById(id);
             case ADMIN -> this.clientDataService.getById(id);
+            case CLIENT -> this.clientDataService.getById(id);
         };
     }
 
