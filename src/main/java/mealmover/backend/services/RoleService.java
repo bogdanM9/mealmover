@@ -6,6 +6,7 @@ import mealmover.backend.constants.RoleConstants;
 import mealmover.backend.dtos.requests.RoleCreateRequestDto;
 import mealmover.backend.dtos.requests.RoleUpdateRequestDto;
 import mealmover.backend.dtos.responses.RoleResponseDto;
+import mealmover.backend.enums.Role;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
 import mealmover.backend.mapper.RoleMapper;
@@ -62,6 +63,14 @@ public class RoleService {
         return this.roleRepository
             .findByName(name)
             .orElseGet(() -> this.roleRepository.save(new RoleModel(name)));
+    }
+
+    public RoleModel getByName(Role role) {
+        String roleName = role.toCapitalize();
+        log.info("Getting role by name: {}", roleName);
+        return this.roleRepository
+            .findByName(roleName)
+            .orElseThrow(() -> new NotFoundException(RoleConstants.NOT_FOUND_BY_NAME + ": " + roleName));
     }
 
     public List<RoleResponseDto> getAll() {

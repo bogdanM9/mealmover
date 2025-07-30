@@ -17,6 +17,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -90,6 +92,14 @@ public class AuthController {
         this.authService.resetPassword(requestDto);
         return ResponseEntity.ok(MessageResponseDto.success(AuthConstants.RESET_PASSWORD));
     }
+
+    @GetMapping("/oauth2/login/google")
+    public void googleLogin(HttpServletResponse response) throws IOException {
+        // This endpoint redirects to Google OAuth2 authorization server
+        // The redirect URL is handled by Spring Security OAuth2
+        response.sendRedirect("/oauth2/authorization/google");
+    }
+
 //
 //    @PostMapping("/change-email")
 //    public ResponseEntity<String> changeEmail(@Valid @RequestBody UserChangeEmail requestDto) {
