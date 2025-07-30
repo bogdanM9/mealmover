@@ -67,23 +67,29 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<MessageResponseDto> logout(HttpServletResponse response) {
+    public ResponseEntity<MessageResponseDto> logout(
+        HttpServletResponse response
+    ) {
         CookieUtils.clearAccessTokenCookie(response);
-        MessageResponseDto responseDto = MessageResponseDto.success("Logout successful");
+        MessageResponseDto responseDto = MessageResponseDto.success(AuthConstants.LOGOUT_SUCCESS);
         return ResponseEntity.ok(responseDto);
     }
 
-//    @PostMapping("/forgot-password")
-//    public ResponseEntity<MessageResponseDto> forgotPassword(@Valid @RequestBody AuthForgotPasswordRequestDto requestDto) {
-//        this.authService.forgotPassword(requestDto);
-//        return ResponseEntity.ok(MessageResponseDto.info("An email has been sent to your email address with instructions to reset your password."));
-//    }
-//
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<MessageResponseDto> resetPassword(@Valid @RequestBody AuthResetPasswordRequestDto requestDto) {
-//        this.authService.resetPassword(requestDto);
-//        return ResponseEntity.ok(MessageResponseDto.success("Your password have been changed successfully."));
-//    }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<MessageResponseDto> forgotPassword(
+        @Valid @RequestBody AuthForgotPasswordRequestDto requestDto
+    ) {
+        this.authService.forgotPassword(requestDto);
+        return ResponseEntity.ok(MessageResponseDto.info(AuthConstants.FORGOT_PASSWORD));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<MessageResponseDto> resetPassword(
+        @Valid @RequestBody AuthResetPasswordRequestDto requestDto
+    ) {
+        this.authService.resetPassword(requestDto);
+        return ResponseEntity.ok(MessageResponseDto.success(AuthConstants.RESET_PASSWORD));
+    }
 //
 //    @PostMapping("/change-email")
 //    public ResponseEntity<String> changeEmail(@Valid @RequestBody UserChangeEmail requestDto) {

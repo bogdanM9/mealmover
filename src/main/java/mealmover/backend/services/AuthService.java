@@ -43,6 +43,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PendingClientDataService pendingClientDataService;
 
+    @Transactional
     public void register(AuthRegisterRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
@@ -81,6 +82,7 @@ public class AuthService {
         this.emailService.sendActivateEmail(email, token);
     }
 
+    @Transactional
     public void activate(AuthActivateRequestDto requestDto) {
         String token = requestDto.getToken();
 
@@ -95,6 +97,7 @@ public class AuthService {
         this.pendingClientDataService.deleteById(pendingPatientModel.getId());
     }
 
+    @Transactional
     public String login(AuthLoginRequestDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
             requestDto.getEmail(),
@@ -108,39 +111,39 @@ public class AuthService {
         return this.tokenService.generateAccessToken(authentication);
     }
 
-//    public void forgotPassword(AuthForgotPasswordRequestDto requestDto) {
-//        String email = requestDto.getEmail();
-//
-//        log.info("Attempting to reset password for email: {}", email);
-//
-//        UserModel userModel = this.userService.getModelByEmail(email);
-//
-//        UUID userId = userModel.getId();
-//
-//        String token = this.tokenService.generateResetPasswordToken(email, userId);
-//
-//        System.out.println(token);
-//
-//        this.emailService.sendForgotPasswordEmail(email, token);
-//
-//        log.info("Successfully sent reset password email to: {}", email);
-//    }
-//
-//    public void resetPassword(AuthResetPasswordRequestDto requestDto) {
-//        String token = requestDto.getToken();
-//        String newPassword = requestDto.getNewPassword();
-//
-//        String email = this.tokenService.validateResetPasswordToken(token);
-//
-//        UserModel userModel = this.userService.getModelByEmail(email);
-//
-//        String hashedPassword = this.passwordEncoder.encode(newPassword);
-//
-//        userModel.setPassword(hashedPassword);
-//
-//        this.userService.create(userModel);
-//    }
-//
+    @Transactional
+    public void forgotPassword(AuthForgotPasswordRequestDto requestDto) {
+        String email = requestDto.getEmail();
+
+        log.info("Attempting to reset password for email: {}", email);
+
+        UserModel userModel = this.userDataService.getByEmail(email);
+
+        UUID userId = userModel.getId();
+
+        String token = this.tokenService.generateResetPasswordToken(email, userId);
+
+        System.out.println(token);
+
+        this.emailService.sendResetPasswordEmail(email, token);
+
+        log.info("Successfully sent reset password email to: {}", email);
+    }
+
+    @Transactional
+    public void resetPassword(AuthResetPasswordRequestDto requestDto) {
+        String token = requestDto.getToken();
+        String newPassword = requestDto.getNewPassword();
+
+        String email = this.tokenService.validateResetPasswordToken(token);
+
+        UserModel userModel = this.userDataService.getByEmail(email);
+
+        String hashedPassword = this.passwordEncoder.encode(newPassword);
+
+        userModel.setPassword(hashedPassword);
+    }
+
 //
 //    public void changeEmail(UserChangeEmail requestDto) {
 //        String newEmail = requestDto.getNewEmail();
