@@ -15,7 +15,7 @@
     <description>backend</description>
 
     <properties>
-        <java.version>23</java.version>
+        <java.version>17</java.version>
         <lombok.version>1.18.30</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
     </properties>
