@@ -5,15 +5,17 @@ import mealmover.backend.models.UserModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails, OAuth2User {
     @Serial
     private static final long serialVersionUID = 1L;
     private final UUID id;
@@ -21,6 +23,7 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+    private Map<String, Object> attributes;
 
     public UserDetailsImpl(
         UUID id,
@@ -32,6 +35,17 @@ public class UserDetailsImpl implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+    }
+
+    public UserDetailsImpl(UserModel user, Map<String, Object> attributes) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.authorities = user.getRoles()
+            .stream()
+            .map(role -> new SimpleGrantedAuthority(role.getName()))
+            .collect(Collectors.toList());
+        this.attributes = attributes;
     }
 
     public static UserDetailsImpl build(UserModel user) {
@@ -85,6 +99,17 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    // OAuth2User interface methods
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    @Override
+    public String getName() {
+        return String.valueOf(id);
     }
 
     @Override

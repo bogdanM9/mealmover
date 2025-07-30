@@ -25,6 +25,9 @@ public class WebSecurityConfig {
         "/api/auth/login",
         "/api/auth/register",
         "/api/auth/activate",
+        "/api/auth/forgot-password",
+        "/api/auth/reset-password",
+        "/api/auth/oauth2/**",
 
         "/api/roles",
         "/api/products",
@@ -35,6 +38,9 @@ public class WebSecurityConfig {
     private final JwtService jwtService;
     private final AuthEntryPointJwt authEntryPointJwt;
     private final UserDetailsServiceImpl userDetailsService;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -71,6 +77,12 @@ public class WebSecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(oAuth2UserService))
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler)
             );
 
         http.authenticationProvider(authenticationProvider());
