@@ -28,13 +28,13 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final SizeService sizeService;
     private final ProductMapper productMapper;
+    private final ReviewService reviewService;
     private final CategoryService categoryService;
+    private final SecurityService securityService;
     private final IngredientService ingredientService;
     private final ProductRepository productRepository;
     private final FileStorageService fileStorageService;
     private final ExtraIngredientService extraIngredientService;
-    private final ReviewService reviewService;
-    private final SecurityService securityService;
 
     @Transactional
     public ProductResponseDto create(MultipartFile image, ProductCreateRequestDto productCreateRequestDto) {
@@ -232,8 +232,8 @@ public class ProductService {
         }
 
         return topReviewedFoods.stream()
-                .map(this.productMapper::toDto)
-                .collect(Collectors.toList());
+            .map(this.productMapper::toDto)
+            .collect(Collectors.toList());
     }
 
 

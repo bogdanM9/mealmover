@@ -3,6 +3,7 @@ package mealmover.backend.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import mealmover.backend.enums.Token;
+import mealmover.backend.security.oauth2.OAuth2UserImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -61,25 +62,38 @@ public class JwtService {
             .compact();
     }
 
-    /**
-     * Generate JWT token for authentication
-     */
     public String generateAccessToken(Authentication authentication) {
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl user = resolveUserDetails(authentication);
 
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = buildAccessClaims(user);
 
-        claims.put("id", userPrincipal.getId());
-        claims.put("type", Token.ACCESS.name());
-        claims.put(
-            "roles",
-            userPrincipal.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","))
+        return generateToken(claims, user.getUsername(), jwtAccessTokenExpiration);
+    }
+
+    private UserDetailsImpl resolveUserDetails(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof OAuth2UserImpl oauth) {
+            return oauth.getUserDetails();
+        }
+        if (principal instanceof UserDetailsImpl user) {
+            return user;
+        }
+        throw new IllegalArgumentException(
+            "Unsupported principal type: " + principal.getClass().getName()
         );
+    }
 
-        return generateToken(claims, userPrincipal.getUsername(), jwtAccessTokenExpiration);
+    private Map<String, Object> buildAccessClaims(UserDetailsImpl user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+        claims.put("type", Token.ACCESS.name());
+        claims.put("roles", user.getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","))
+        );
+        return claims;
     }
 
     /**

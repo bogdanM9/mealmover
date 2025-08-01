@@ -9,6 +9,7 @@ import mealmover.backend.dtos.requests.CreditCardCreateRequestDto;
 import mealmover.backend.dtos.responses.AddressResponseDto;
 import mealmover.backend.dtos.responses.ClientResponseDto;
 import mealmover.backend.dtos.responses.CreditCardResponseDto;
+import mealmover.backend.dtos.responses.OAuth2UserInfoDto;
 import mealmover.backend.enums.Role;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
@@ -22,7 +23,10 @@ import mealmover.backend.models.CreditCardModel;
 import mealmover.backend.models.RoleModel;
 import mealmover.backend.repositories.ClientRepository;
 import mealmover.backend.security.SecurityService;
+import mealmover.backend.services.data.UserDataService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -33,11 +37,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ClientService {
     private final RoleService roleService;
-    private final UserService userService;
     private final ClientMapper clientMapper;
     private final AddressMapper addressMapper;
     private final AddressService addressService;
     private final SecurityService securityService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDataService userDataService;
     private final ClientRepository clientRepository;
     private final CreditCardMapper creditCardMapper;
     private final CreditCardService creditCardService;
@@ -47,7 +52,7 @@ public class ClientService {
 
         log.info("Attempting to create a client with email: {}", email);
 
-        if (this.userService.existsByEmail(email)) {
+        if (this.userDataService.existsByEmail(email)) {
             throw new ConflictException(ClientConstants.ALREADY_EXISTS_BY_EMAIL);
         }
 
@@ -60,6 +65,35 @@ public class ClientService {
         log.info("Successfully created client with name: {}", model.getEmail());
 
         return savedClientModel;
+    }
+
+    @Transactional
+    public ClientModel getOrCreateOAuth2Client(OAuth2UserInfoDto userInfoDto) {
+        String email = userInfoDto.getEmail();
+
+        log.info("Getting or creating OAuth2 client with email: {}", email);
+
+        return this.clientRepository
+            .findByEmail(email)
+            .orElseGet(() -> createOAuth2Client(userInfoDto));
+    }
+
+    private ClientModel createOAuth2Client(OAuth2UserInfoDto userInfoDto) {
+        log.info("Creating new OAuth2 client with email: {}", userInfoDto.getEmail());
+
+        ClientModel client = new ClientModel();
+
+        client.setEmail(userInfoDto.getEmail());
+        client.setLastName(userInfoDto.getLastName());
+        client.setFirstName(userInfoDto.getFirstName());
+
+        client.setPassword(this.passwordEncoder.encode(UUID.randomUUID().toString()));
+
+        RoleModel roleModel = this.roleService.getModelByName(Role.CLIENT.toCapitalize());
+
+        client.addRole(roleModel);
+
+        return this.clientRepository.save(client);
     }
 
     public List<ClientResponseDto> getAll() {

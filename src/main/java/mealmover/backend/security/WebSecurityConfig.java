@@ -1,6 +1,9 @@
 package mealmover.backend.security;
 
 import lombok.RequiredArgsConstructor;
+import mealmover.backend.security.oauth2.OAuth2AuthenticationFailureHandler;
+import mealmover.backend.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import mealmover.backend.security.oauth2.OAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +28,7 @@ public class WebSecurityConfig {
         "/api/auth/login",
         "/api/auth/register",
         "/api/auth/activate",
+        "/api/auth/oauth2/**",
 
         "/api/roles",
         "/api/products",
@@ -33,8 +37,13 @@ public class WebSecurityConfig {
     };
 
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
     private final AuthEntryPointJwt authEntryPointJwt;
+    private final OAuth2UserService oAuth2UserService;
     private final UserDetailsServiceImpl userDetailsService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -45,8 +54,8 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
+        authProvider.setPasswordEncoder(passwordEncoder);
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
     }
@@ -54,11 +63,6 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -71,6 +75,19 @@ public class WebSecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .authorizationEndpoint(
+                    authorization -> authorization.baseUri("/api/auth/oauth2/authorize")
+                )
+                .redirectionEndpoint(
+                    redirection -> redirection.baseUri("/api/auth/oauth2/callback/*")
+                )
+                .userInfoEndpoint(
+                    userInfo -> userInfo.userService(oAuth2UserService)
+                )
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler)
             );
 
         http.authenticationProvider(authenticationProvider());

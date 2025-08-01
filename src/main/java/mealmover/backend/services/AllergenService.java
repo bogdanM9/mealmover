@@ -20,7 +20,6 @@ import java.util.UUID;
 public class AllergenService {
     private final AllergenMapper mapper;
     private final AllergenRepository repository;
-    private static final Logger logger = LoggerFactory.getLogger(AllergenService.class);
 
     public AllergenResponseDto create(AllergenCreateDto dto) {
         String name = dto.getName();

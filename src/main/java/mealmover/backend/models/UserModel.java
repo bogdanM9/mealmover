@@ -29,11 +29,17 @@ public class UserModel {
     @Column(nullable=false, unique=true)
     private String email;
 
-    @Column(nullable=false)
+    @Column
     private String password;
 
-    @Column(nullable=false, unique=true)
+    @Column
     private String phoneNumber;
+
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
+    @Column(nullable = false)
+    private boolean passwordLoginEnabled = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -43,6 +49,10 @@ public class UserModel {
     )
     @ToString.Exclude
     private Set<RoleModel> roles = new HashSet<>();
+
+    public boolean hasPassword() {
+        return this.password != null && !this.password.isBlank();
+    }
 
     public void addRole(RoleModel role) {
         if (role != null) {
