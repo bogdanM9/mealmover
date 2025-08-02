@@ -12,10 +12,11 @@ import java.util.UUID;
 public class ProductResponseDto {
     private UUID id;
     private String name;
+    private float rating;
+    private int nrReviews;
+    private String imageUri;
     private CategoryResponseDto category;
     private Set<SizeResponseDto> sizes;
     private Set<IngredientResponseDto> ingredients;
     private Set<ExtraIngredientResponseDto> extraIngredients;
-    private float rating;
-    private String imageUri;
 }

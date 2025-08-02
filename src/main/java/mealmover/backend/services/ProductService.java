@@ -8,11 +8,14 @@ import mealmover.backend.dtos.responses.ProductResponseDto;
 import mealmover.backend.dtos.responses.ReviewResponseDto;
 import mealmover.backend.exceptions.ConflictException;
 import mealmover.backend.exceptions.NotFoundException;
+import mealmover.backend.interfaces.ProductRatingDto;
 import mealmover.backend.mapper.ProductMapper;
 import mealmover.backend.models.*;
 import mealmover.backend.records.ProductData;
 import mealmover.backend.repositories.ProductRepository;
 import mealmover.backend.security.SecurityService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,30 +58,30 @@ public class ProductService {
         productModel.setCategory(categoryModel);
 
         productModel.setIngredients(
-                productModel.getIngredients()
-                        .stream()
-                        .map(ingredientService::getOrCreate)
-                        .collect(Collectors.toSet()
-                        )
+            productModel.getIngredients()
+                .stream()
+                .map(ingredientService::getOrCreate)
+                .collect(Collectors.toSet()
+            )
         );
 
         productModel.setExtraIngredients(
-                productModel.getExtraIngredients()
-                        .stream()
-                        .map(extraIngredientService::getOrCreate)
-                        .collect(Collectors.toSet()
-                        )
+            productModel.getExtraIngredients()
+                .stream()
+                .map(extraIngredientService::getOrCreate)
+                .collect(Collectors.toSet()
+            )
         );
 
         productModel.setProductSizes(
-                productCreateRequestDto.getSizes()
-                        .stream()
-                        .map(sizeCreateDto -> {
-                            SizeModel sizeModel = this.sizeService.getOrCreate(sizeCreateDto);
-                            return new ProductSizeModel(sizeModel, productModel);
-                        })
-                        .collect(Collectors.toSet()
-                        )
+            productCreateRequestDto.getSizes()
+            .stream()
+                .map(sizeCreateDto -> {
+                    SizeModel sizeModel = this.sizeService.getOrCreate(sizeCreateDto);
+                    return new ProductSizeModel(sizeModel, productModel);
+                })
+                .collect(Collectors.toSet()
+            )
         );
 
         ProductModel savedProduct = this.productRepository.save(productModel);
@@ -158,29 +161,29 @@ public class ProductService {
     }
 
 
-    public List<ProductResponseDto> getTopFourBestSellingProducts() {
-        List<ProductModel> productModels = this.productRepository.findTopFourBestSellingProducts();
-        return productModels.stream()
-            .map(this.productMapper::toDto)
-            .collect(Collectors.toList());
-    }
-
-    public List<ProductResponseDto> getTopSellingByCategory(UUID categoryId) {
-        if (!this.categoryService.existsById(categoryId)) {
-            log.error("Category with id {} does not exist", categoryId);
-            throw new NotFoundException("There is no category with this id");
-        }
-
-        List<ProductModel> topSellingDrinks = this.productRepository.findTopFourBestSellingProductsByCategoryId(categoryId);
-
-        if (topSellingDrinks.isEmpty()) {
-            log.warn("No top selling drinks found for category with id {}", categoryId);
-            return List.of();
-        }
-
-        return topSellingDrinks.stream()
-                .map(this.productMapper::toDto).toList();
-    }
+//    public List<ProductResponseDto> getTopFourBestSellingProducts() {
+//        List<ProductModel> productModels = this.productRepository.findTopFourBestSellingProducts();
+//        return productModels.stream()
+//            .map(this.productMapper::toDto)
+//            .collect(Collectors.toList());
+//    }
+//
+//    public List<ProductResponseDto> getTopSellingByCategory(UUID categoryId) {
+//        if (!this.categoryService.existsById(categoryId)) {
+//            log.error("Category with id {} does not exist", categoryId);
+//            throw new NotFoundException("There is no category with this id");
+//        }
+//
+//        List<ProductModel> topSellingDrinks = this.productRepository.findTopFourBestSellingProductsByCategoryId(categoryId);
+//
+//        if (topSellingDrinks.isEmpty()) {
+//            log.warn("No top selling drinks found for category with id {}", categoryId);
+//            return List.of();
+//        }
+//
+//        return topSellingDrinks.stream()
+//                .map(this.productMapper::toDto).toList();
+//    }
     @Transactional
     public void seed(ProductData productData){
         String name = productData.name();
@@ -193,11 +196,11 @@ public class ProductService {
         productModel.setCategory(categoryModel);
 
         productModel.setIngredients(
-                productModel.getIngredients()
-                        .stream()
-                        .map(ingredientService::getOrCreate)
-                        .collect(Collectors.toSet()
-                        )
+            productModel.getIngredients()
+                    .stream()
+                    .map(ingredientService::getOrCreate)
+                    .collect(Collectors.toSet()
+                    )
         );
 
         productModel.setExtraIngredients(
@@ -220,33 +223,26 @@ public class ProductService {
 
         ProductModel savedProduct = this.productRepository.save(productModel);
         log.info("Seeded product with name: {}", savedProduct.getName());
-
     }
 
-    public List<ProductResponseDto> getTop4ReviewedFoods() {
-        List<ProductModel> topReviewedFoods = this.productRepository.findTop4ReviewedFoods();
-
-        if (topReviewedFoods.isEmpty()) {
-            log.warn("No top reviewed foods found");
-            return List.of();
-        }
-
-        return topReviewedFoods.stream()
-            .map(this.productMapper::toDto)
-            .collect(Collectors.toList());
+    public List<ProductResponseDto> getTopRatedDrinks(int limit) {
+        List<ProductRatingDto> topRatedDrinks = this.productRepository.findTopRatedDrinks(
+            PageRequest.of(0, limit)
+        );
+        return this.productMapper.ratingDtosToResponseDtos(topRatedDrinks);
     }
 
+    public List<ProductResponseDto> getTopRatedFood(int limit) {
+        List<ProductRatingDto> topRatedFood = this.productRepository.findTopRatedFood(
+            PageRequest.of(0, limit)
+        );
+        return this.productMapper.ratingDtosToResponseDtos(topRatedFood);
+    }
 
-    public List<ProductResponseDto> getTop4ReviewedDrinks() {
-        List<ProductModel> topReviewedDrinks = this.productRepository.findTop4ReviewedDrinks();
-
-        if (topReviewedDrinks.isEmpty()) {
-            log.warn("No top reviewed drinks found");
-            return List.of();
-        }
-
-        return topReviewedDrinks.stream()
-                .map(this.productMapper::toDto)
-                .collect(Collectors.toList());
+    public List<ProductResponseDto> getTopRatedProducts(int limit) {
+        List<ProductRatingDto> topRatedProducts = this.productRepository.findTopRatedProducts(
+            PageRequest.of(0, limit)
+        );
+        return this.productMapper.ratingDtosToResponseDtos(topRatedProducts);
     }
 }

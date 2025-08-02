@@ -30,6 +30,8 @@ public class WebSecurityConfig {
         "/api/auth/activate",
         "/api/auth/oauth2/**",
 
+        "/api/products/**",
+
         "/api/roles",
         "/api/products",
         "/api/categories",

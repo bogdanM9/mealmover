@@ -33,37 +33,29 @@ public class ProductController {
         ProductResponseDto responseDto = this.productService.create(image, requestDto);
         return ResponseEntity.ok(responseDto);
     }
-
-//    @GetMapping("/top-selling")
-//    public ResponseEntity<List<ProductResponseDto>> getTopSellingProducts() {
-//        List<ProductResponseDto> responseDtos = this.productService.getTop4SellingProducts();
-//        return ResponseEntity.ok(responseDtos);
-//    }
-
-    @GetMapping("/top-reviewed-foods")
-    public ResponseEntity<List<ProductResponseDto>> getTopReviewedFoods() {
-        List<ProductResponseDto> responseDtos = this.productService.getTop4ReviewedFoods();
+    @GetMapping("/top-rated-food")
+    public ResponseEntity<List<ProductResponseDto>> getTopRatedFood(
+            @RequestParam(name = "limit", required = false, defaultValue = "4") int limit
+    ) {
+        List<ProductResponseDto> responseDtos = this.productService.getTopRatedFood(limit);
         return ResponseEntity.ok(responseDtos);
     }
 
-    @GetMapping("/top-reviewed-drinks")
-    public ResponseEntity<List<ProductResponseDto>> getTopReviewedDrinks() {
-        List<ProductResponseDto> responseDtos = this.productService.getTop4ReviewedDrinks();
+    @GetMapping("/top-rated-drinks")
+    public ResponseEntity<List<ProductResponseDto>> getTopRatedDrinks(
+        @RequestParam(name = "limit", required = false, defaultValue = "4") int limit
+    ) {
+        List<ProductResponseDto> responseDtos = this.productService.getTopRatedDrinks(limit);
         return ResponseEntity.ok(responseDtos);
     }
 
-    @GetMapping("/top-selling/drinks/{categoryId}")
-    public ResponseEntity<List<ProductResponseDto>> getTopSellingDrinks(@PathVariable("categoryId") UUID categoryId) {
-        List<ProductResponseDto> responseDtos = this.productService.getTopSellingByCategory(categoryId);
+    @GetMapping("/top-rated-products")
+    public ResponseEntity<List<ProductResponseDto>> getTopRatedProducts(
+        @RequestParam(name = "limit", required = false, defaultValue = "4") int limit
+    ) {
+        List<ProductResponseDto> responseDtos = this.productService.getTopRatedProducts(limit);
         return ResponseEntity.ok(responseDtos);
     }
-
-
-//    @PostMapping("/add-review")
-//    public ResponseEntity<ReviewResponseDto> addReview(@Valid @RequestBody ReviewCreateRequestDto requestDto) {
-//        ReviewResponseDto response = this.productService.addReview(requestDto);
-//        return ResponseEntity.ok(response);
-//    }
 
     @GetMapping
     public ResponseEntity<Set<ProductResponseDto>> getAll() {

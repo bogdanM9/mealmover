@@ -1,6 +1,8 @@
 package mealmover.backend.repositories;
 
+import mealmover.backend.interfaces.ProductRatingDto;
 import mealmover.backend.models.ProductModel;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,44 +17,32 @@ public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
     boolean existsByName(String name);
     Optional<ProductModel> findByName(String name);
 
-    @Query(value = """
-        SELECT p.* FROM products p
-        JOIN product_sizes ps ON p.id = ps.product_id
-        JOIN orders_products op ON ps.id = op.product_size_id
-        GROUP BY p.id
-        ORDER BY SUM(op.quantity) DESC
-        LIMIT 4
-    """, nativeQuery = true)
-    List<ProductModel> findTopFourBestSellingProducts();
+    @Query("""
+        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as reviewCount
+        FROM ProductModel p
+        LEFT JOIN p.reviews r
+        WHERE LOWER(p.category.name) <> 'drinks'
+        GROUP BY p
+        ORDER BY averageRating DESC NULLS LAST, reviewCount DESC
+    """)
+    List<ProductRatingDto> findTopRatedFood(Pageable pageable);
 
-    @Query(value = """
-        SELECT p.* FROM products p
-        JOIN product_sizes ps ON p.id = ps.product_id
-        JOIN orders_products op ON ps.id = op.product_size_id
-        WHERE p.category_id = :categoryId
-        GROUP BY p.id
-        ORDER BY SUM(op.quantity) DESC
-        LIMIT 4
-        """, nativeQuery = true)
-    List<ProductModel> findTopFourBestSellingProductsByCategoryId(@Param("categoryId") UUID categoryId);
+    @Query("""
+        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as reviewCount
+        FROM ProductModel p
+        LEFT JOIN p.reviews r
+        WHERE LOWER(p.category.name) = 'drinks'
+        GROUP BY p
+        ORDER BY averageRating DESC NULLS LAST, reviewCount DESC
+    """)
+    List<ProductRatingDto> findTopRatedDrinks(Pageable pageable);
 
-    @Query(value = """
-        SELECT p.* FROM products p
-        JOIN reviews r ON p.id = r.product_id
-        GROUP BY p.id
-        ORDER BY COUNT(r.id) DESC
-        LIMIT 4
-    """, nativeQuery = true)
-    List<ProductModel> findTop4ReviewedFoods();
-
-    @Query
-(value = """
-        SELECT p.* FROM products p
-        JOIN reviews r ON p.id = r.product_id
-        WHERE p.category_id = :categoryId
-        GROUP BY p.id
-        ORDER BY COUNT(r.id) DESC
-        LIMIT 4
-    """, nativeQuery = true)
-    List<ProductModel> findTop4ReviewedDrinks();
+    @Query("""
+        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as reviewCount
+        FROM ProductModel p
+        LEFT JOIN p.reviews r
+        GROUP BY p
+        ORDER BY averageRating DESC NULLS LAST, reviewCount DESC
+    """)
+    List<ProductRatingDto> findTopRatedProducts(Pageable pageable);
 }
