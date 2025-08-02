@@ -12,5 +12,4 @@ public class ReviewCreateRequestDto {
     private float rating;
     private String text;
     private UUID productId;
-    private UUID clientId;
 }

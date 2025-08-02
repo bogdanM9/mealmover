@@ -91,22 +91,6 @@ public class ProductService {
     }
 
 
-    public ReviewResponseDto addReview(ReviewCreateRequestDto reviewCreateRequestDto) {
-        if (this.reviewService.existsByClientIdAndProductId(reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId())) {
-            log.error("Client with id {} already reviewed product with id {}", reviewCreateRequestDto.getClientId(), reviewCreateRequestDto.getProductId());
-            throw new ConflictException("You already reviewed this product");
-        }
-
-        ClientModel clientModel = (ClientModel) this.securityService.getModelCurrentUser();
-
-        ProductModel product = this.productRepository
-            .findById(reviewCreateRequestDto.getProductId())
-            .orElseThrow(() -> new NotFoundException("There is no product with this id"));
-
-        return this.reviewService.create(reviewCreateRequestDto, clientModel, product);
-    }
-
-
     public ProductResponseDto getById(UUID id) {
         ProductModel productModel = this.productRepository
             .findById(id)

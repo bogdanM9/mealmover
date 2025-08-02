@@ -9,6 +9,8 @@ import mealmover.backend.models.ClientModel;
 import mealmover.backend.models.ProductModel;
 import mealmover.backend.models.ReviewModel;
 import mealmover.backend.repositories.ReviewRepository;
+import mealmover.backend.security.SecurityService;
+import mealmover.backend.services.data.ProductDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,26 +23,27 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewService {
 
+    private final SecurityService securityService;
     private final ReviewRepository repository;
 
+    private final ProductDataService productService;
     private final ReviewMapper mapper;
 
+    public ReviewResponseDto create(ReviewCreateRequestDto requestDto) {
+        ClientModel clientModel = (ClientModel) this.securityService.getModelCurrentUser();
+        ProductModel productModel = productService.getProductById(requestDto.getProductId());
 
-    public ReviewResponseDto create(ReviewCreateRequestDto requestDto, ClientModel client, ProductModel product) {
-        UUID clientId = requestDto.getClientId();
-        UUID productId = requestDto.getProductId();
-
-        log.info("Attempting to create a review for client with id: {} and product with id: {}", clientId, productId);
+        log.info("Attempting to create a review with data: {}", requestDto);
 
         ReviewModel review = this.mapper.toModel(requestDto);
-
-        review.setClient(client);
-        review.setProduct(product);
+        review.setClient(clientModel);
+        review.setProduct(productModel);
 
         ReviewModel savedReview = this.repository.save(review);
 
         return this.mapper.toDto(savedReview);
     }
+
 
     public List<ReviewResponseDto> getAll() {
         log.info("Attempting to get all reviews");
