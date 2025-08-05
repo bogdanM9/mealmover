@@ -18,20 +18,18 @@ import java.util.UUID;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
+    private final MapperService mapperService;
     private final CategoryService categoryService;
 
-    private final MapperService mapperService;
-
     @PostMapping
-        public ResponseEntity<CategoryResponseDto> create(
-                @RequestParam("image") MultipartFile image,
-                @RequestParam("data") String data
+    public ResponseEntity<CategoryResponseDto> create(
+        @RequestParam("image") MultipartFile image,
+        @RequestParam("data") String data
     ) {
-            CategoryCreateRequestDto requestDto = this.mapperService.parseCategoryCreateData(data);
-            CategoryResponseDto response = this.categoryService.create(image, requestDto);
-            return ResponseEntity.ok(response);
-        }
-
+        CategoryCreateRequestDto requestDto = this.mapperService.parseCategoryCreateData(data);
+        CategoryResponseDto response = this.categoryService.create(image, requestDto);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDto>> getAll() {
@@ -57,5 +55,13 @@ public class CategoryController {
         this.categoryService.deleteAll();
         MessageResponseDto responseDto = MessageResponseDto.success("All categories deleted successfully.");
         return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/top-rated-categories")
+    public ResponseEntity<List<CategoryResponseDto>> getTopRatedCategories(
+        @RequestParam(name = "limit", required = false, defaultValue = "4") int limit
+    ) {
+        List<CategoryResponseDto> responseDtos = this.categoryService.getTopRatedCategories(limit);
+        return ResponseEntity.ok(responseDtos);
     }
 }

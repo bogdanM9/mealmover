@@ -10,5 +10,7 @@ import java.util.UUID;
 public class CategoryResponseDto {
     private UUID id;
     private String name;
+    private double rating;
     private String imageUri;
+    private int numberOfReviews;
 }

@@ -3,6 +3,7 @@ import mealmover.backend.dtos.requests.ProductCreateRequestDto;
 import mealmover.backend.dtos.responses.ProductResponseDto;
 import mealmover.backend.interfaces.ProductRatingDto;
 import mealmover.backend.models.ProductModel;
+import mealmover.backend.models.ReviewModel;
 import mealmover.backend.records.ProductData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,18 +27,31 @@ public interface ProductMapper {
     ProductModel toModel(ProductData data);
 
     @Mapping(target = "sizes", source = "productSizes")
+    @Mapping(target = "rating", expression = "java(calculateAverageRating(model))")
+    @Mapping(target = "numberOfReviews", expression = "java(model.getReviews().size())")
     ProductResponseDto toDto(ProductModel model);
+
+    default double calculateAverageRating(ProductModel model) {
+        if (model.getReviews().isEmpty()) {
+            return 0.0;
+        }
+        return model
+            .getReviews()
+            .stream()
+            .mapToDouble(ReviewModel::getRating)
+            .average()
+            .orElse(0.0);
+    }
 
     default ProductResponseDto ratingDtoToResponseDto(ProductRatingDto ratingDto) {
         ProductResponseDto dto = toDto(ratingDto.getProduct());
 
-        float rating = ratingDto.getAverageRating() != null
-            ? ratingDto.getAverageRating().floatValue()
-            : 0f;
+        double rating = ratingDto.getAverageRating() != null
+            ? ratingDto.getAverageRating()
+            : 0.0;
 
         dto.setRating(rating);
-
-        dto.setNrReviews(ratingDto.getReviewCount().intValue());
+        dto.setNumberOfReviews(ratingDto.getNumberOfReviews().intValue());
 
         return dto;
     }

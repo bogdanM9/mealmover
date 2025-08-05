@@ -31,6 +31,7 @@ public class WebSecurityConfig {
         "/api/auth/oauth2/**",
 
         "/api/products/**",
+        "/api/categories/**",
 
         "/api/roles",
         "/api/products",
@@ -45,7 +46,6 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {

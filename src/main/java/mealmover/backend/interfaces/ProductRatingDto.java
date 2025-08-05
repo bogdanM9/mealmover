@@ -4,6 +4,6 @@ import mealmover.backend.models.ProductModel;
 
 public interface ProductRatingDto {
     ProductModel getProduct();
-    Double getAverageRating();
-    Long getReviewCount();
+    Double       getAverageRating();
+    Long         getNumberOfReviews();
 }

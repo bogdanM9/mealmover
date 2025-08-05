@@ -20,17 +20,17 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CreditCardService {
+    private final PasswordEncoder passwordEncoder;
     private final CreditCardMapper creditCardMapper;
     private final CreditCardRepository creditCardRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public List<CreditCardResponseDto> getAllCreditCards() {
         log.info("Getting all CreditCards");
           return this.creditCardRepository
-                .findAll()
-                .stream()
-                .map(this.creditCardMapper::toDto)
-                .toList();
+            .findAll()
+            .stream()
+            .map(this.creditCardMapper::toDto)
+            .toList();
     }
 
     public void delete(ClientModel client, UUID creditCardId) {

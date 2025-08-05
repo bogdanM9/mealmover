@@ -18,31 +18,34 @@ public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
     Optional<ProductModel> findByName(String name);
 
     @Query("""
-        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as reviewCount
+        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as numberOfReviews
         FROM ProductModel p
         LEFT JOIN p.reviews r
         WHERE LOWER(p.category.name) <> 'drinks'
         GROUP BY p
-        ORDER BY averageRating DESC NULLS LAST, reviewCount DESC
+        ORDER BY averageRating DESC NULLS LAST, numberOfReviews DESC
     """)
     List<ProductRatingDto> findTopRatedFood(Pageable pageable);
 
     @Query("""
-        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as reviewCount
+        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as numberOfReviews
         FROM ProductModel p
         LEFT JOIN p.reviews r
         WHERE LOWER(p.category.name) = 'drinks'
         GROUP BY p
-        ORDER BY averageRating DESC NULLS LAST, reviewCount DESC
+        ORDER BY averageRating DESC NULLS LAST, numberOfReviews DESC
     """)
     List<ProductRatingDto> findTopRatedDrinks(Pageable pageable);
 
     @Query("""
-        SELECT p as product, AVG(r.rating) as averageRating, COUNT(r) as reviewCount
+        SELECT 
+            p as product,
+            AVG(r.rating) as averageRating,
+            COUNT(r)      as numberOfReviews
         FROM ProductModel p
         LEFT JOIN p.reviews r
         GROUP BY p
-        ORDER BY averageRating DESC NULLS LAST, reviewCount DESC
+        ORDER BY averageRating DESC NULLS LAST, numberOfReviews DESC
     """)
     List<ProductRatingDto> findTopRatedProducts(Pageable pageable);
 }

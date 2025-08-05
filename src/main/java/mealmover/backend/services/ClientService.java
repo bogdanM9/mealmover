@@ -232,7 +232,6 @@ public class ClientService {
         AddressModel addressModel = this.addressMapper.toModel(requestDto);
 
         addressModel.setMain(clientModel.getAddresses().size() == 0);
-
         addressModel.setClient(clientModel);
 
         AddressModel createdModel = this.addressService.create(addressModel);

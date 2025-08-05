@@ -210,23 +210,20 @@ public class ProductService {
     }
 
     public List<ProductResponseDto> getTopRatedDrinks(int limit) {
-        List<ProductRatingDto> topRatedDrinks = this.productRepository.findTopRatedDrinks(
-            PageRequest.of(0, limit)
-        );
+        Pageable pageable = PageRequest.of(0, limit);
+        List<ProductRatingDto> topRatedDrinks = this.productRepository.findTopRatedDrinks(pageable);
         return this.productMapper.ratingDtosToResponseDtos(topRatedDrinks);
     }
 
     public List<ProductResponseDto> getTopRatedFood(int limit) {
-        List<ProductRatingDto> topRatedFood = this.productRepository.findTopRatedFood(
-            PageRequest.of(0, limit)
-        );
+        Pageable pageable = PageRequest.of(0, limit);
+        List<ProductRatingDto> topRatedFood = this.productRepository.findTopRatedFood(pageable);
         return this.productMapper.ratingDtosToResponseDtos(topRatedFood);
     }
 
     public List<ProductResponseDto> getTopRatedProducts(int limit) {
-        List<ProductRatingDto> topRatedProducts = this.productRepository.findTopRatedProducts(
-            PageRequest.of(0, limit)
-        );
+        Pageable pageable = PageRequest.of(0, limit);
+        List<ProductRatingDto> topRatedProducts = this.productRepository.findTopRatedProducts(pageable);
         return this.productMapper.ratingDtosToResponseDtos(topRatedProducts);
     }
 }

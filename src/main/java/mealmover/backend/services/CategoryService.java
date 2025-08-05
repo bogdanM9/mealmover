@@ -5,11 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import mealmover.backend.dtos.requests.CategoryCreateRequestDto;
 import mealmover.backend.dtos.responses.CategoryResponseDto;
 import mealmover.backend.exceptions.NotFoundException;
+import mealmover.backend.interfaces.CategoryRatingDto;
 import mealmover.backend.mapper.CategoryMapper;
 import mealmover.backend.models.CategoryModel;
 import mealmover.backend.records.CategoryData;
 import mealmover.backend.repositories.CategoryRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,8 +24,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-
     private final CategoryMapper categoryMapper;
+
     private final CategoryRepository categoryRepository;
 
     private final FileStorageService fileStorageService;
@@ -58,10 +63,6 @@ public class CategoryService {
         this.categoryRepository.save(categoryModel);
 
         log.info("Successfully seeded category with name: {}", name);
-    }
-
-    public boolean existsById(UUID id) {
-        return this.categoryRepository.existsById(id);
     }
 
     public List<CategoryResponseDto> getAll() {
@@ -111,5 +112,11 @@ public class CategoryService {
         return this.categoryRepository
             .findByName(category)
             .orElseThrow(() -> new NotFoundException("Category not found by name: " + category));
+    }
+
+    public List<CategoryResponseDto> getTopRatedCategories(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<CategoryRatingDto> topCategories = this.categoryRepository.findTopRatedCategories(pageable);
+        return this.categoryMapper.ratingDtosToResponseDtos(topCategories);
     }
 }

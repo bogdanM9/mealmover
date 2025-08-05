@@ -2,6 +2,7 @@ package mealmover.backend.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -13,13 +14,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @Table(name = "products")
 public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, length = 200)
+    @Column(unique = true, nullable = false, length = 200)
     private String name;
 
     @Column(name = "image_uri", nullable = false)
@@ -54,23 +56,4 @@ public class ProductModel {
         inverseJoinColumns = @JoinColumn(name = "extra_ingredient_id")
     )
     private Set<ExtraIngredientModel> extraIngredients = new HashSet<>();
-
-    public ProductModel() {
-        // Default constructor for JPA
-    }
-
-    public ProductModel(
-        String name, String imageUri, CategoryModel category,
-        Set<ProductSizeModel> productSizes,
-        Set<IngredientModel> ingredients,
-        Set<ExtraIngredientModel> extraIngredients
-    ) {
-         this.name = name;
-         this.imageUri = imageUri;
-         this.category = category;
-         this.productSizes = productSizes != null ? productSizes : new HashSet<>();
-         this.ingredients = ingredients != null ? ingredients : new HashSet<>();
-         this.extraIngredients = extraIngredients != null ? extraIngredients : new HashSet<>();
-    }
-
 }

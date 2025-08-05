@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface SizeMapper {
     SizeResponseDto toDto(SizeModel model);
+
     @Mapping(target = "id", source = "size.id")
     @Mapping(target = "name", source = "size.name")
     @Mapping(target = "price", source = "size.price")
