@@ -8,8 +8,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ReviewCreateRequestDto {
+    private String text;
     private String title;
     private float rating;
-    private String text;
     private UUID productId;
 }

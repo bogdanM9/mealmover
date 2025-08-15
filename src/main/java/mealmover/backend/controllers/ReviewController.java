@@ -13,12 +13,13 @@ import java.util.List;
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 public class ReviewController {
-
     private final ReviewService reviewService;
 
     @GetMapping
     public ResponseEntity<List<ReviewResponseDto>> getAll() {
-        return ResponseEntity.ok(this.reviewService.getAll());
+        List<ReviewResponseDto> responseDtos = this.reviewService.getAll();
+//        Review
+        return ResponseEntity.ok(responseDtos);
     }
 
     @PostMapping
@@ -26,6 +27,4 @@ public class ReviewController {
         ReviewResponseDto responseDto = this.reviewService.create(requestDto);
         return ResponseEntity.ok(responseDto);
     }
-
-
 }

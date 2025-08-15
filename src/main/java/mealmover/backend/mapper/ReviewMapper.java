@@ -9,13 +9,14 @@ import org.mapstruct.Mapper;
 import java.util.UUID;
 
 @Mapper(
-    componentModel = "spring", uses = { ProductMapper.class, ClientMapper.class }
+    componentModel = "spring",
+    uses = {
+        ClientMapper.class,
+        ProductMapper.class
+    }
 )
 public interface ReviewMapper {
-
     ReviewModel toModel(ReviewCreateRequestDto dto);
 
     ReviewResponseDto toDto(ReviewModel model);
-
-    ProductModel toProductModel(UUID productId);
 }

@@ -181,10 +181,10 @@ public class ProductService {
 
         productModel.setIngredients(
             productModel.getIngredients()
-                    .stream()
-                    .map(ingredientService::getOrCreate)
-                    .collect(Collectors.toSet()
-                    )
+                .stream()
+                .map(ingredientService::getOrCreate)
+                .collect(Collectors.toSet()
+            )
         );
 
         productModel.setExtraIngredients(

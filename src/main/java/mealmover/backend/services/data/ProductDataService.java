@@ -14,13 +14,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ProductDataService {
-
     private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
-    public ProductModel getProductById(UUID productId) {
+    public ProductModel getById(UUID productId) {
         log.info("Fetching product with ID: {}", productId);
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+        return productRepository
+            .findById(productId)
+            .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
     }
 }
